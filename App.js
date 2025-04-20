@@ -14,6 +14,11 @@ import ResetPasswordSuccessScreen from './screens/ResetPasswordSuccessScreen';
 import SplashScreen from './screens/SplashScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import CustomDrawerContent from './screens/CustomDrawerContent';
+import AddressScreen from './screens/AddressScreen';
+import ChatScreen from './screens/ChatScreen';
+import Cart from './screens/Cart';
+import FavoritesScreen from './screens/FavoritesScreen';
+import OrderHistoryScreen from './screens/OrderHistoryScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -34,6 +39,11 @@ function HomeStack() {
       <Stack.Screen name="HomeMain" component={HomeScreen} />
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />
       <Stack.Screen name="VendorList" component={VendorListScreen} />
+      <Stack.Screen name="Address" component={AddressScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="Favorites" component={FavoritesScreen} />
+      <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
     </Stack.Navigator>
   );
 }
