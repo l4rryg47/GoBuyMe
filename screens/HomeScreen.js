@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
   newOrderButton: {
     backgroundColor: '#FF521B',
     padding: 16,
-    margin: 40,
+    margin: 'auto',
+    width: '80%',
     borderRadius: 8,
     alignItems: 'center',
   },

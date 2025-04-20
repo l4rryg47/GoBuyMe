@@ -1,40 +1,37 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { auth } from '../firebase';
+import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const CustomDrawerContent = (props) => {
-  const navigation = useNavigation();
-
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      navigation.navigate('Login'); // Redirect to login screen after logout
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      {/* Default drawer items */}
-      {props.state.routes.map((route, index) => (
-        <TouchableOpacity
-          key={route.key}
-          style={styles.drawerItem}
-          onPress={() => props.navigation.navigate(route.name)}
-        >
-          <Text style={styles.drawerText}>{route.name}</Text>
-        </TouchableOpacity>
-      ))}
+      {/* Custom Header */}
+      <View style={styles.header}>
+        <Image 
+          source={require('../assets/logo.png')} 
+          style={styles.logo}
+        />
+        <Text style={styles.appName}>GoBuyMe</Text>
+      </View>
 
-      {/* Logout button at the bottom */}
-      <TouchableOpacity
-        style={[styles.drawerItem, styles.logoutButton]}
-        onPress={handleLogout}
-      >
-        <Text style={[styles.drawerText, styles.logoutText]}>Logout</Text>
-      </TouchableOpacity>
+      {/* Scrollable Content */}
+      <View style={styles.scrollContainer}>
+        <DrawerContentScrollView {...props}>
+          <DrawerItemList {...props} />
+        </DrawerContentScrollView>
+      </View>
+
+      {/* Fixed Footer with Sign Out */}
+      <View style={styles.footer}>
+        <Pressable 
+          style={styles.logoutButton}
+          onPress={() => console.log('Logout pressed')}
+        >
+          <MaterialIcons name="logout" size={20} color="#FF6B6B" />
+          <Text style={styles.logoutText}>Sign Out</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -42,23 +39,42 @@ const CustomDrawerContent = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    backgroundColor: '#FFF',
   },
-  drawerItem: {
-    padding: 15,
+  header: {
+    padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#F0F0F0',
+    alignItems: 'center',
   },
-  drawerText: {
-    fontSize: 16,
+  logo: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+  },
+  appName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF521B',
+  },
+  scrollContainer: {
+    flex: 1,  // Takes all available space between header and footer
+  },
+  footer: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
   },
   logoutButton: {
-    marginTop: 'auto', // Pushes to bottom
-    backgroundColor: '#f8f8f8',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
   logoutText: {
-    color: 'red',
-    fontWeight: 'bold',
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#FF6B6B',
   },
 });
 

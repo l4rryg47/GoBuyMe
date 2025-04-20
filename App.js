@@ -19,6 +19,11 @@ import ChatScreen from './screens/ChatScreen';
 import Cart from './screens/Cart';
 import FavoritesScreen from './screens/FavoritesScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
+import Cards from './screens/Cards';
+import OffersScreen from './screens/OffersScreen';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,12 +71,55 @@ export default function App() {
         screenOptions={{
           headerShown: false,
           drawerActiveTintColor: '#FF6B6B', // Optional: active item color
+          drawerInactiveTintColor: '#555',
+          drawerLabelStyle: {
+            marginLeft: 5,
+            fontSize: 15,
+            fontWeight: '500',
+          },
+          drawerStyle: {
+            width: 300,
+          },
+          drawerItemStyle: {
+            borderRadius: 8,
+            paddingLeft: 5,
+          },
+          drawerIconContainerStyle: {
+            marginRight: -20,  // This creates space between icon and text
+            marginLeft: 10,
+          },
         }}
       >
-        <Drawer.Screen name="Home" component={HomeStack} />
-        
-        <Stack.Screen name="My Profile" component={ProfileScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Drawer.Screen name="Home" component={HomeStack} options={{
+            drawerIcon: ({ color }) => (
+              <MaterialIcons name="home" size={22} color={color} />
+            ),
+          }}/>        
+        <Stack.Screen name="My Profile" component={ProfileScreen} options={{
+            drawerIcon: ({ color }) => (
+              <MaterialIcons name="person" size={22} color={color} />
+            ),
+          }} />
+        <Stack.Screen name="My Addresses" component={AddressScreen} options={{
+            drawerIcon: ({ color }) => (
+              <FontAwesome6 name="location-dot" size={20} color={color} />
+            ),
+          }} />
+        <Stack.Screen name="My Payment Cards" component={Cards} options={{
+            drawerIcon: ({ color }) => (
+              <FontAwesome5 name="money-bill" size={20} color={color} />
+            ),
+          }} />
+        <Stack.Screen name="Awoof Packages" component={OffersScreen} options={{
+            drawerIcon: ({ color }) => (
+              <MaterialIcons name="local-offer" size={20} color={color} />
+            ),
+          }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{
+            drawerIcon: ({ color }) => (
+              <FontAwesome6 name="gear" size={20} color={color} />
+            ),
+          }} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
