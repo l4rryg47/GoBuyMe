@@ -11,6 +11,7 @@ import {
   Dimensions
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 // Calculate grid item width based on screen width
 const { width } = Dimensions.get('window');
@@ -172,7 +173,9 @@ const dummyRestaurants = [
           <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
         </Pressable>
         <Text style={styles.locationText}>Owerri</Text>
-        <View style={{ width: 24 }} />
+        <View style={{ width: 24 }}>
+          <AntDesign name="like1" size={22} color="#FF521B" />
+        </View>
       </View>
 
       {/* Tab Headers */}
@@ -303,7 +306,6 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   activeTabText: {
-    fontWeight: 'bold',
     color: '#FF521B',
   },
   contentContainer: {
