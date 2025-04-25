@@ -30,11 +30,39 @@ import {
   };
   
   // ================= RESTAURANTS =================
-  export const fetchRestaurants = async () => {
-    const snapshot = await getDocs(collection(db, 'restaurants'));
+  export const fetchRestaurants = async (location = 'Owerri') => {
+    const q = query(
+      collection(db, 'restaurants'),
+      where('location', '==', location)
+    );
+    const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   };
   
+  export const fetchMeals = async (restaurantId = null) => {
+    let q;
+    if (restaurantId) {
+      q = query(
+        collection(db, 'meals'),
+        where('restaurantId', '==', restaurantId)
+      );
+    } else {
+      q = query(collection(db, 'meals'));
+    }
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  };
+  
+  export const fetchRestaurantDetails = async (restaurantId) => {
+    const docRef = doc(db, 'restaurants', restaurantId);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      throw new Error('Restaurant not found');
+    }
+  };
   // ================= ORDERS =================
   export const createOrder = async (userId, items, total) => {
     const orderRef = await addDoc(collection(db, 'orders'), {

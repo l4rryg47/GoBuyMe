@@ -108,7 +108,9 @@ export default function ProfileScreen({ navigation }) {
           </>
         )}
       </View>
-
+      <Pressable style={styles.button} onPress={() => navigation.navigate('ResetPassword')}>
+        <Text style={styles.buttonText}>Reset Password</Text>
+      </Pressable>
       <Pressable 
         style={[styles.button, { backgroundColor: '#FF521B' }]}
         onPress={handleLogout}
@@ -177,5 +179,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  link: {
+    color: '#FF521B',
+    textAlign: 'center',
   },
 });

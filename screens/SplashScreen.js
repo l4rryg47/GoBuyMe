@@ -1,16 +1,18 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 
 export default function SplashScreen({ navigation }) {
   setTimeout(() => {
     navigation.replace('Login');
-  }, 3000);
+  }, 5000);
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+    <ImageBackground
+      source={require('../assets/platter.jpg')}
+      style={styles.container}
+    >
       <Text style={styles.title}>GoBuyMe</Text>
       <Text style={styles.subtitle}>Food delivered at your command!</Text>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -19,20 +21,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 48,
     fontWeight: 'bold',
+    color: '#FF521B',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#888',
+    fontSize: 24,
+    color: '#FFF',
     marginTop: 10,
   },
 });

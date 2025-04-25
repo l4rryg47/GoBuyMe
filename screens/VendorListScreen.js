@@ -45,7 +45,7 @@ export default function VendorListScreen({ navigation }) {
 const dummyRestaurants = [
   {
     id: '1',
-    name: 'Old English Bar and Grill',
+    name: 'eMart (Grocery Store)',
     cuisine: 'African • Continental',
     rating: 4.5,
     deliveryTime: '20-30 mins',
