@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,10 +8,13 @@ import {
   TextInput,
   Image,
   FlatList,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase'; // Make sure you have this configured
 
 // Calculate grid item width based on screen width
 const { width } = Dimensions.get('window');
@@ -40,109 +43,72 @@ export default function VendorListScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState('restaurants');
   const [restaurantSearch, setRestaurantSearch] = useState('');
   const [mealSearch, setMealSearch] = useState('');
+  const [restaurants, setRestaurants] = useState([]);
+  const [meals, setMeals] = useState([]); // New state for meals
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Dummy restaurant data - replace with Firestore data later
-const dummyRestaurants = [
-  {
-    id: '1',
-    name: 'eMart (Grocery Store)',
-    cuisine: 'African • Continental',
-    rating: 4.5,
-    deliveryTime: '20-30 mins',
-    image: require('../assets/restaurants1.jpg')
-  },
-  {
-    id: '2',
-    name: "Joseph's Pot",
-    cuisine: 'Indian • Asian',
-    rating: 4.2,
-    deliveryTime: '25-35 mins',
-    image: require('../assets/restaurants2.jpg')
-  },
-  {
-    id: '3',
-    name: 'McDonalds 24 Hours Fast Food',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants3.jpg')
-  },
-  {
-    id: '4',
-    name: 'De Angels Bar and Grill',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants4.jpg')
-  },
-  {
-    id: '5',
-    name: 'Mangroove',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants5.jpg')
-  },
-  {
-    id: '6',
-    name: 'Pizza Palace',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants1.jpg')
-  },
-  {
-    id: '7',
-    name: 'Pizza Palace',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants4.jpg')
-  },
-  {
-    id: '8',
-    name: 'Pizza Palace',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants3.jpg')
-  },
-  {
-    id: '9',
-    name: 'Pizza Palace',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants4.jpg')
-  },
-  {
-    id: '10',
-    name: 'Pizza Palace',
-    cuisine: 'Italian',
-    rating: 4.7,
-    deliveryTime: '15-25 mins',
-    image: require('../assets/restaurants1.jpg')
-  },
-];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch restaurants
+        const restaurantsSnapshot = await getDocs(collection(db, 'restaurants'));
+        const restaurantsData = restaurantsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        // Fetch meals (only name and imageUrl)
+        const mealsSnapshot = await getDocs(collection(db, 'meals'));
+        const mealsData = mealsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+          imageUrl: doc.data().imageUrl,
+          restaurantId: doc.data().restaurantId // Keep reference if needed
+        }));
+        
+        setRestaurants(restaurantsData);
+        setMeals(mealsData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data: ", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Filter meals based on search
-  const filteredMeals = dummyMeals.filter(meal =>
+  const filteredMeals = meals.filter(meal =>
     meal.name.toLowerCase().includes(mealSearch.toLowerCase())
   );
 
-  // Render each meal item
+  // Render each meal item (updated for Firestore URLs)
   const renderMealItem = ({ item }) => (
     <View style={styles.mealItem}>
-      <Image source={item.image} style={styles.mealImage} />
+      <Image 
+        source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/placeholder.jpg')} 
+        style={styles.mealImage} 
+      />
       <Text style={styles.mealName} numberOfLines={1}>{item.name}</Text>
     </View>
   );
 
-    // Filter restaurants based on search
-    const filteredRestaurants = dummyRestaurants.filter(restaurant =>
-      restaurant.name.toLowerCase().includes(restaurantSearch.toLowerCase()) ||
-      restaurant.cuisine.toLowerCase().includes(restaurantSearch.toLowerCase())
+  // Filter restaurants based on search
+  const filteredRestaurants = restaurants.filter(restaurant => {
+    const cuisine = String(restaurant.cuisine || '').toLowerCase(); // Handles all cases
+    const name = String(restaurant.name || '').toLowerCase();
+    const searchTerm = restaurantSearch.toLowerCase().trim();
+  
+    return (
+      name.includes(searchTerm) || 
+      cuisine.includes(searchTerm)
     );
+  });
 
   // Render each restaurant item
   const renderRestaurantItem = ({ item }) => (
@@ -150,20 +116,39 @@ const dummyRestaurants = [
       style={styles.restaurantCard}
       onPress={() => navigation.navigate('Restaurant', { restaurantId: item.id })}
     >
-      <Image source={item.image} style={styles.restaurantImage} />
+      <Image 
+        source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/placeholder.jpg')} 
+        style={styles.restaurantImage} 
+      />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantName}>{item.name}</Text>
-        <Text style={styles.restaurantCuisine}>{item.cuisine}</Text>
+        <Text style={styles.restaurantCuisine}>{item.cuisine || 'Various cuisines'}</Text>
         <View style={styles.restaurantMeta}>
           <View style={styles.ratingContainer}>
             <MaterialIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.ratingText}>{item.rating}</Text>
+            <Text style={styles.ratingText}>{item.rating || 'N/A'}</Text>
           </View>
-          <Text style={styles.deliveryTime}>{item.deliveryTime}</Text>
+          <Text style={styles.deliveryTime}>{item.deliveryTime || 'Time not specified'}</Text>
         </View>
       </View>
     </Pressable>
   );
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#FF521B" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.container, styles.errorContainer]}>
+        <Text style={styles.errorText}>Error loading restaurants: {error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -268,6 +253,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF9F7',
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',
