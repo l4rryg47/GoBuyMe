@@ -89,13 +89,16 @@ export default function VendorListScreen({ navigation }) {
 
   // Render each meal item (updated for Firestore URLs)
   const renderMealItem = ({ item }) => (
-    <View style={styles.mealItem}>
+    <Pressable 
+      style={styles.mealItem}
+      onPress={() => navigation.navigate('MealCard', { mealId: item.id })}
+    >
       <Image 
         source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/placeholder.jpg')} 
         style={styles.mealImage} 
       />
       <Text style={styles.mealName} numberOfLines={1}>{item.name}</Text>
-    </View>
+    </Pressable>
   );
 
   // Filter restaurants based on search

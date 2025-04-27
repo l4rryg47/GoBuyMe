@@ -21,6 +21,7 @@ import FavoritesScreen from './screens/FavoritesScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
 import Cards from './screens/Cards';
 import OffersScreen from './screens/OffersScreen';
+import MealCardScreen from './screens/MealCardScreen'
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -44,6 +45,7 @@ function HomeStack() {
       <Stack.Screen name="HomeMain" component={HomeScreen} />
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />
       <Stack.Screen name="VendorList" component={VendorListScreen} />
+      <Stack.Screen name="MealCard" component={MealCardScreen} />
       <Stack.Screen name="Address" component={AddressScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="Cart" component={Cart} />
