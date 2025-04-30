@@ -13,6 +13,13 @@ export default function AddressScreen({ navigation }) {
                   </Pressable>
       <Text style={styles.title}>Address Screen</Text>
       <Text>This screen will show addresses</Text>
+      <Text>Address 1:</Text>
+      <Text>Address 2:</Text>
+      <Pressable onPress={() => navigation.navigate('PaymentOptions')}>
+        <Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20 }}>
+          Proceed to Payment
+        </Text>
+      </Pressable>
     </View>
   );
 }

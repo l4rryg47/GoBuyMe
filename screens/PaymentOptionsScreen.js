@@ -1,7 +1,7 @@
 // screens/VendorListScreen.js
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function Cart({ navigation }) {
+export default function PaymentOptionsScreen({ navigation }) {
   return (
     <View style={styles.container}>
             {/* Back Button */}
@@ -11,16 +11,17 @@ export default function Cart({ navigation }) {
                   >
                     <Text style={styles.backButtonText}>← Back</Text>
                   </Pressable>
-      <Text style={styles.title}>Shopping Basket</Text>
-      <Text>This screen will show shopping basket items</Text>
-      <Text>Total Cost of Items:</Text>
-      <Text>Delivery:</Text>
-      <Text>Subtotal:</Text>
-      <Text>Discount:</Text>
-      <Text>Final Total:</Text>
-      <Pressable onPress={() => navigation.navigate('Address')}>
+      <Text style={styles.title}>Payment Screen</Text>
+      <Text>This screen will show payment options</Text>
+      <Text>Card</Text>
+      <Text>Cash</Text>
+      <Text>Transfer</Text>
+      <Text>Wallet</Text>
+      <Text>Cash on Delivery</Text>
+      
+      <Pressable onPress={() => navigation.navigate('Confirmation')}>
         <Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20 }}>
-          Proceed to Checkout
+          Proceed
         </Text>
       </Pressable>
     </View>

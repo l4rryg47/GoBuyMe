@@ -16,13 +16,15 @@ import SettingsScreen from './screens/SettingsScreen';
 import CustomDrawerContent from './screens/CustomDrawerContent';
 import AddressScreen from './screens/AddressScreen';
 import ChatScreen from './screens/ChatScreen';
-import Cart from './screens/Cart';
+import CartDetails from './screens/CartDetails';
 import FavoritesScreen from './screens/FavoritesScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
 import Cards from './screens/Cards';
 import OffersScreen from './screens/OffersScreen';
 import MealCardScreen from './screens/MealCardScreen';
 import MealDetailsScreen from './screens/MealDetailsScreen';
+import PaymentOptionsScreen from './screens/PaymentOptionsScreen';
+import ConfirmationScreen from './screens/ConfirmationScreen';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -50,7 +52,9 @@ function HomeStack() {
       <Stack.Screen name="MealDetails" component={MealDetailsScreen} />
       <Stack.Screen name="Address" component={AddressScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="Cart" component={CartDetails} />
+      <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
+      <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
     </Stack.Navigator>
