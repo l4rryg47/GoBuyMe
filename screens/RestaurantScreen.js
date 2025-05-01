@@ -26,7 +26,9 @@ export default function RestaurantScreen({ navigation, route }) {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setRestaurant(docSnap.data());
+          const restaurantData = docSnap.data();
+          console.log('Fetched restaurant data:', restaurantData); // Debugging
+          setRestaurant(restaurantData);
         } else {
           console.log('No such document!');
         }
@@ -137,6 +139,7 @@ export default function RestaurantScreen({ navigation, route }) {
       mealId: id,
       mealName: item.name,
       mealPrice: item.price,
+      mealImageUrl: item.imageUrl,
     })
   }
   style={{ flex: 1 }}>

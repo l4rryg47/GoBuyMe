@@ -25,6 +25,7 @@ import MealCardScreen from './screens/MealCardScreen';
 import MealDetailsScreen from './screens/MealDetailsScreen';
 import PaymentOptionsScreen from './screens/PaymentOptionsScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
+import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -34,6 +35,7 @@ const Stack = createNativeStackNavigator();
 
 function HomeStack() {
   return (
+    <CartProvider>
     <Stack.Navigator
       initialRouteName="Splash"
       screenOptions={{
@@ -58,6 +60,7 @@ function HomeStack() {
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
     </Stack.Navigator>
+    </CartProvider>
   );
 }
 

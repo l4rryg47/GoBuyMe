@@ -13,7 +13,8 @@ export default function ConfirmationScreen({ navigation }) {
                   </Pressable>
       <Text style={styles.title}>Confirmation Screen</Text>
       <Text>This screen will show detailed order for confirmation</Text>
-      <Text>Address 1:</Text>
+      <Text>
+         1:</Text>
       <Text>Address 2:</Text>
       <Pressable onPress={() => navigation.navigate('PaymentOptions')}>
         <Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20 }}>

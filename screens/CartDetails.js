@@ -1,28 +1,26 @@
-// screens/VendorListScreen.js
+import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useCart } from './CartContext';
 
-export default function Cart({ navigation }) {
+export default function CartDetails({ route, navigation }) {
+  const { restaurantId } = route.params;
+  const { restaurantCarts } = useCart();
+  const cart = restaurantCarts[restaurantId] || { total: 0, items: [] };
+
   return (
     <View style={styles.container}>
-            {/* Back Button */}
-                  <Pressable 
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                  >
-                    <Text style={styles.backButtonText}>← Back</Text>
-                  </Pressable>
-      <Text style={styles.title}>Shopping Basket</Text>
-      <Text>This screen will show shopping basket items</Text>
-      <Text>Total Cost of Items:</Text>
-      <Text>Delivery:</Text>
-      <Text>Subtotal:</Text>
-      <Text>Discount:</Text>
-      <Text>Final Total:</Text>
-      <Pressable onPress={() => navigation.navigate('Address')}>
-        <Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20 }}>
+      <Text style={styles.title}>Your Cart</Text>
+      {cart.items.map(item => (
+        <View key={item.id} style={styles.item}>
+          <Text>₦{item.price.toFixed(2)}</Text>
+        </View>
+      ))}
+      <Pressable style={{ padding: 10, backgroundColor: '#FF521B', borderRadius: 5 }} onPress={() => navigation.navigate('Address')}>
+        <Text style={{ color: '#fff', textAlign: 'center' }}>
           Proceed to Checkout
         </Text>
       </Pressable>
+      <Text style={styles.total}>Total: ₦{cart.total.toFixed(2)}</Text>
     </View>
   );
 }
@@ -32,12 +30,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#FFF9F7',
-    marginTop: 40,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FF521B',
-    marginBottom: 16,
+    marginBottom: 20,
   },
+  item: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EDEDF4',
+  },
+  total: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF521B',
+    marginTop: 20,
+  }
 });
