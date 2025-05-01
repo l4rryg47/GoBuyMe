@@ -136,10 +136,13 @@ export default function RestaurantScreen({ navigation, route }) {
               </Pressable>
               <Pressable onPress={() =>
     navigation.navigate('MealDetails', {
-      mealId: id,
+      restaurantId,
+      mealDescription: item.description,
       mealName: item.name,
       mealPrice: item.price,
       mealImageUrl: item.imageUrl,
+      extras: item.extras,
+      protein: item.protein,
     })
   }
   style={{ flex: 1 }}>

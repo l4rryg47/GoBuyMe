@@ -1,49 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image, ScrollView } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useCart } from './CartContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { RadioButton } from 'react-native-paper'; // Import RadioButton if using react-native-paper
+import { CheckBox } from 'react-native-elements'; // Import CheckBox
 
 
 export default function MealDetailsScreen({ route, navigation }) {
-  const { mealId, mealName, mealPrice, restaurantId, mealImageUrl } = route.params;
+  const { mealId, mealName, mealPrice, restaurantId, mealImageUrl, mealDescription, extras, protein } = route.params;
   const { addToCart, getCartTotal, getCartItemCount } = useCart();
   const [restaurant, setRestaurant] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
   const [cartTotal, setCartTotal] = useState(0);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [selectedExtra, setSelectedExtra] = useState(null);
+  const [selectedProtein, setSelectedProtein] = useState(null);
+  const [selectedExtras, setSelectedExtras] = useState([]);
+  const [selectedProteins, setSelectedProteins] = useState([]);
 
   // Initialize cart total when restaurantId changes
   useEffect(() => {
     setCartTotal(getCartTotal(restaurantId));
     setCartItemCount(getCartItemCount(restaurantId));
+  }, [restaurantId]);
 
+  useEffect(() => {
     const fetchRestaurant = async () => {
-          try {
-            const docRef = doc(db, 'restaurants', restaurantId);
-            const docSnap = await getDoc(docRef);
-    
-            if (docSnap.exists()) {
-              setRestaurant(docSnap.data());
-            } else {
-              console.log('No such document!');
-            }
-          } catch (error) {
-            console.error('Error fetching restaurant:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchRestaurant();
+      try {
+        const docRef = doc(db, 'restaurants', restaurantId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const restaurantData = docSnap.data();
+          console.log('Fetched restaurant data:', restaurantData); // Debugging
+          setRestaurant(restaurantData);
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching restaurant:', error);
+      }
+    };
+
+    fetchRestaurant();
   }, [restaurantId]);
 
   const handleAddToCart = () => {
     addToCart(restaurantId, mealPrice);
     setCartTotal(prev => prev + parseFloat(mealPrice));
     setCartItemCount(prev => prev + 1);
+  };
+
+  const handleSelectExtra = (key, price) => {
+    if (selectedExtras.includes(key)) {
+      // Deselect the item
+      setSelectedExtras((prev) => prev.filter((item) => item !== key));
+      setCartTotal((prev) => prev - price);
+    } else {
+      // Select the item
+      setSelectedExtras((prev) => [...prev, key]);
+      setCartTotal((prev) => prev + price);
+    }
+  };
+
+  const handleSelectProtein = (key, price) => {
+    if (selectedProteins.includes(key)) {
+      // Deselect the item
+      setSelectedProteins((prev) => prev.filter((item) => item !== key));
+      setCartTotal((prev) => prev - price);
+    } else {
+      // Select the item
+      setSelectedProteins((prev) => [...prev, key]);
+      setCartTotal((prev) => prev + price);
+    }
   };
 
   return (
@@ -72,13 +104,48 @@ export default function MealDetailsScreen({ route, navigation }) {
             : require('../assets/placeholder.jpg') // Fallback image
         }
         style={styles.mealImage}
+        resizeMode="cover"
       />
-        <Text style={styles.title}>Meal Details</Text>
-        <Text style={styles.detail}>ID: {mealId}</Text>
-        <Text style={styles.detail}>Name: {mealName}</Text>
-        <Text style={styles.detail}>Price: ₦{mealPrice}</Text>
+        <Text style={styles.title}>{mealName}</Text>
+        <Text style={styles.detail}>{mealDescription}</Text>
+        
+        <Text style={styles.detail2}>Price: ₦{mealPrice}</Text>
       </View>
-      
+      <ScrollView style={styles.menuScrollContainer}>
+        <View>
+          {/* Render Extras */}
+          <Text style={styles.sectionTitle}>Extras</Text>
+          {extras && Object.keys(extras).length > 0 ? (
+            Object.entries(extras).map(([key, extra]) => (
+              <CustomCheckbox
+                key={key}
+                isChecked={selectedExtras.includes(key)}
+                onPress={() => handleSelectExtra(key, extra.price)}
+                label={extra.name}
+                price={extra.price}
+              />
+            ))
+          ) : (
+            <Text style={styles.noItemsText}>No extras available</Text>
+          )}
+
+          {/* Render Protein */}
+          <Text style={styles.sectionTitle}>Protein</Text>
+          {protein && Object.keys(protein).length > 0 ? (
+            Object.entries(protein).map(([key, item]) => (
+              <CustomCheckbox
+                key={key}
+                isChecked={selectedProteins.includes(key)}
+                onPress={() => handleSelectProtein(key, item.price)}
+                label={item.name}
+                price={item.price}
+              />
+            ))
+          ) : (
+            <Text style={styles.noItemsText}>No protein options available</Text>
+          )}
+        </View>
+      </ScrollView>
       <Pressable onPress={handleAddToCart} style={styles.addToCartButton}>
         <Text style={styles.addToCart}>Add to Cart</Text>
       </Pressable>
@@ -98,15 +165,35 @@ export default function MealDetailsScreen({ route, navigation }) {
         )}
       </Pressable>
       {console.log('Meal Image URL:', mealImageUrl)}
+      {console.log('Restaurant Data:', restaurant)}
+      {console.log('Breakfast Meals:', restaurant?.menuPreview?.breakfast)}
     </View>
   );
 }
+
+const CustomCheckbox = ({ isChecked, onPress, label, price }) => {
+  return (
+    <Pressable onPress={onPress} style={styles.checkboxRow}>
+      <View style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
+        {isChecked && <View style={styles.checkboxInner} />}
+      </View>
+      <Text style={styles.checkboxLabel}>
+        {label} - ₦{price}
+      </Text>
+    </Pressable>
+  );
+};
 
 // Keep your existing styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF9F7',
+  },
+  menuScrollContainer: {
+    flex: 1,
+    padding: 16,
+    paddingBottom: 20,
   },
   title: {
     fontSize: 24,
@@ -118,6 +205,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#2A324B',
     marginBottom: 8,
+    fontStyle: 'italic',
+  },
+  detail2: {
+    fontSize: 18,
+    color: '#2A324B',
+    marginBottom: 8,
+    fontWeight: 'bold',
   },
   cartIcon: {
     position: 'absolute',
@@ -189,8 +283,10 @@ const styles = StyleSheet.create({
   mealImage: {
     width: '100%',
     height: 200,
+    aspectRatio: 16 / 9,
     borderRadius: 8,
     marginBottom: 16,
+    overflow: 'hidden',
   },
   addToCartButton: {
     backgroundColor: '#FF521B',
@@ -205,5 +301,67 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF521B',
+    marginBottom: 8,
+  },
+  groupContainer: {
+    marginBottom: 12,
+  },
+  itemText: {
+    fontSize: 16,
+    color: '#2A324B',
+    marginBottom: 4,
+  },
+  noItemsText: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#777',
+  },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  checkboxContainer: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    padding: 0,
+    margin: 0,
+    marginBottom: 8,
+  },
+  checkboxText: {
+    fontSize: 16,
+    color: '#2A324B',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderColor: '#2A324B',
+    borderRadius: 4,
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: '#FF521B',
+  },
+  checkboxInner: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#FF521B',
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: '#2A324B',
   },
 });
