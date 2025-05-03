@@ -25,6 +25,7 @@ import MealCardScreen from './screens/MealCardScreen';
 import MealDetailsScreen from './screens/MealDetailsScreen';
 import PaymentOptionsScreen from './screens/PaymentOptionsScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
+import MyAddressesScreen from './screens/MyAddressesScreen';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -53,6 +54,7 @@ function HomeStack() {
       <Stack.Screen name="MealCard" component={MealCardScreen} />
       <Stack.Screen name="MealDetails" component={MealDetailsScreen} />
       <Stack.Screen name="Address" component={AddressScreen} />
+      <Stack.Screen name="MyAddresses" component={MyAddressesScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="Cart" component={CartDetails} />
       <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
@@ -111,7 +113,7 @@ export default function App() {
               <MaterialIcons name="person" size={22} color={color} />
             ),
           }} />
-        <Stack.Screen name="My Addresses" component={AddressScreen} options={{
+        <Stack.Screen name="My Addresses" component={MyAddressesScreen} options={{
             drawerIcon: ({ color }) => (
               <FontAwesome6 name="location-dot" size={20} color={color} />
             ),

@@ -54,6 +54,13 @@ export default function MealDetailsScreen({ route, navigation }) {
     setCartItemCount(prev => prev + 1);
   };
 
+  const handleRemoveFromCart = () => {
+    if (cartItemCount > 0) {
+      setCartTotal((prev) => prev - parseFloat(mealPrice));
+      setCartItemCount((prev) => prev - 1);
+    }
+  };
+
   const handleSelectExtra = (key, price) => {
     if (selectedExtras.includes(key)) {
       // Deselect the item
@@ -110,6 +117,14 @@ export default function MealDetailsScreen({ route, navigation }) {
         <Text style={styles.detail}>{mealDescription}</Text>
         
         <Text style={styles.detail2}>Price: ₦{mealPrice}</Text>
+        <View style={styles.addToCartView}>
+        <Pressable onPress={handleAddToCart} style={styles.addToCartButton}>
+          <Text style={styles.addToCart}>Add to Cart</Text>
+        </Pressable>
+        <Pressable onPress={handleRemoveFromCart} style={styles.addToCartButton2}>
+          <Text style={styles.addToCart}>Remove Item</Text>
+        </Pressable>
+        </View>
       </View>
       <ScrollView style={styles.menuScrollContainer}>
         <View>
@@ -146,9 +161,7 @@ export default function MealDetailsScreen({ route, navigation }) {
           )}
         </View>
       </ScrollView>
-      <Pressable onPress={handleAddToCart} style={styles.addToCartButton}>
-        <Text style={styles.addToCart}>Add to Cart</Text>
-      </Pressable>
+      
       
       <Pressable 
         style={styles.cartIcon}
@@ -289,11 +302,20 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   addToCartButton: {
-    backgroundColor: '#FF521B',
-    padding: 16,
-    margin: 'auto',
-    marginTop: 20,
-    width: '80%',
+    backgroundColor: '#4D8B31',
+    padding: 10,
+    // margin: 'auto',
+    marginTop: 10,
+    width: '40%',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addToCartButton2: {
+    backgroundColor: '#832232',
+    padding: 10,
+    // margin: 'auto',
+    marginTop: 10,
+    width: '40%',
     borderRadius: 8,
     alignItems: 'center',
   },
@@ -301,6 +323,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  addToCartView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   sectionTitle: {
     fontSize: 20,
@@ -361,7 +387,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF521B',
   },
   checkboxLabel: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#2A324B',
   },
 });

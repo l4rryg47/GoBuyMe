@@ -1,13 +1,55 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet, Image, Linking } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
+import { doc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { db } from '../firebase';
 
 export default function HomeScreen({ navigation }) {
+  const [defaultAddress, setDefaultAddress] = useState(null);
+
+  useEffect(() => {
+    const fetchDefaultAddress = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          console.error('User is not authenticated');
+          return;
+        }
+
+        const userId = user.uid;
+        const userDoc = await getDoc(doc(db, 'users', userId));
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const addresses = userData.addresses || {};
+
+          // Find the default address
+          const defaultAddressEntry = Object.entries(addresses).find(
+            ([, address]) => address.isDefault
+          );
+
+          if (defaultAddressEntry) {
+            const [id, address] = defaultAddressEntry;
+            setDefaultAddress({ id, ...address });
+          }
+        } else {
+          console.error('User document does not exist');
+        }
+      } catch (error) {
+        console.error('Error fetching default address:', error);
+      }
+    };
+
+    fetchDefaultAddress();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -16,7 +58,7 @@ export default function HomeScreen({ navigation }) {
           <MaterialIcons name="menu" size={28} color="#FF521B" />
         </Pressable>
         <Text style={styles.logoText}>GoBuyMe</Text>
-        <Pressable onPress={() => console.log('Call pressed')}>
+        <Pressable onPress={() => Linking.openURL('tel:08037674195')}>
           <FontAwesome name="phone" size={24} color="#FF521B" />
         </Pressable>
       </View>
@@ -33,61 +75,80 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* Address Section */}
-        <Pressable 
+        <Pressable
           onPress={() => navigation.navigate('Address')}
           style={styles.addressContainer}
         >
           <View style={styles.addressContent}>
-            <FontAwesome6 name="location-dot" size={24} color="black" />
+            <FontAwesome6 name="location-dot" size={24} color="red" />
             <View style={styles.addressTextContainer}>
-              <Text style={styles.addressText}>123 Main St, City, State</Text>
-              <Text style={styles.addressText}>123-456-7890</Text>
+              {defaultAddress ? (
+                <>
+                  <Text style={styles.addressText}>{defaultAddress.street}</Text>
+                  <Text style={styles.addressText}>
+                    {defaultAddress.city}, {defaultAddress.state}, {defaultAddress.zipCode}
+                  </Text>
+                  <Text style={styles.addressText}>{defaultAddress.country}</Text>
+                </>
+              ) : (
+                <Text style={styles.addressText}>No default address set</Text>
+              )}
             </View>
           </View>
           <FontAwesome name="angle-right" size={24} color="black" />
         </Pressable>
+
         {/* New Order Button */}
-      <Pressable
-        style={styles.newOrderButton}
-        onPress={() => navigation.navigate('VendorList')}
-      >
-        <Text style={styles.buttonText}>New Order</Text>
-      </Pressable>
+        <Pressable
+          style={styles.newOrderButton}
+          onPress={() => navigation.navigate('VendorList')}
+        >
+          <Text style={styles.buttonText}>New Order</Text>
+        </Pressable>
       </View>
-      <Pressable style={styles.menuContainer}
-        onPress={() => navigation.navigate('Chat')}>
+
+      {/* Other Menu Options */}
+      <Pressable
+        style={styles.menuContainer}
+        onPress={() => navigation.navigate('Chat')}
+      >
         <View style={styles.menuContent}>
-        <Entypo name="chat" size={24} color="#FF521B" />
-        <Text>Chat with us</Text>
+          <Entypo name="chat" size={24} color="#FF521B" />
+          <Text>Chat with us</Text>
         </View>
         <FontAwesome name="angle-right" size={24} color="black" />
       </Pressable>
-      <Pressable style={styles.menuContainer}
-        onPress={() => navigation.navigate('Cart')}>
+      <Pressable
+        style={styles.menuContainer}
+        onPress={() => navigation.navigate('Cart')}
+      >
         <View style={styles.menuContent}>
-        <FontAwesome name="shopping-basket" size={24} color="#FF521B" />
-        <Text>My Basket</Text>
+          <FontAwesome name="shopping-basket" size={24} color="#FF521B" />
+          <Text>My Basket</Text>
         </View>
         <FontAwesome name="angle-right" size={24} color="black" />
       </Pressable>
-      <Pressable style={styles.menuContainer}
-        onPress={() => navigation.navigate('Favorites')}>
+      <Pressable
+        style={styles.menuContainer}
+        onPress={() => navigation.navigate('Favorites')}
+      >
         <View style={styles.menuContent}>
-        <AntDesign name="like1" size={24} color="#FF521B" />
-        <Text>My Favorites</Text>
+          <AntDesign name="like1" size={24} color="#FF521B" />
+          <Text>My Favorites</Text>
         </View>
         <FontAwesome name="angle-right" size={24} color="black" />
       </Pressable>
-      <Pressable style={styles.menuContainer}
-        onPress={() => navigation.navigate('OrderHistory')}>
+      <Pressable
+        style={styles.menuContainer}
+        onPress={() => navigation.navigate('OrderHistory')}
+      >
         <View style={styles.menuContent}>
-        <Feather name="list" size={24} color="#FF521B" />
-        <Text>My Order History</Text>
+          <Feather name="list" size={24} color="#FF521B" />
+          <Text>My Order History</Text>
         </View>
         <FontAwesome name="angle-right" size={24} color="black" />
       </Pressable>
-      <View style={{padding: 5}}></View>
-      
+      <View style={{ padding: 5 }}></View>
     </View>
   );
 }
@@ -144,7 +205,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 16,
-    color: 'black',
+    color: '#0051FF',
   },
   newOrderButton: {
     backgroundColor: '#FF521B',

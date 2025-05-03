@@ -6,7 +6,7 @@ import { db } from '../firebase';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function AddressScreen({ navigation, route }) {
+export default function MyAddressesScreen({ navigation, route }) {
   const [addresses, setAddresses] = useState({});
   const [selectedAddress, setSelectedAddress] = useState(null);
 
@@ -104,7 +104,7 @@ export default function AddressScreen({ navigation, route }) {
           }
         }}
       >
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>Set Deafault Address</Text>
       </Pressable>
     </View>
   );
