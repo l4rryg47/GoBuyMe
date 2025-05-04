@@ -15,7 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 
-const ChatScreen = () => {
+const ChatScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([
     { 
       id: '1', 
@@ -117,6 +117,9 @@ const ChatScreen = () => {
       style={styles.container}
       keyboardVerticalOffset={90}
     >
+      <Pressable style={styles.backButton} onPress={() => navigation.navigate('HomeMain')}>
+              <Text style={styles.backButtonText}>← Back</Text>
+            </Pressable>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Customer Support</Text>
         <View style={styles.connectionStatus}>
@@ -185,6 +188,15 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#FF521B',
+  },
+  backButton: {
+    marginTop: 40,
+    marginBottom: 16,
+    padding: 16,
+  },
+  backButtonText: {
+    fontSize: 16,
     color: '#FF521B',
   },
   connectionStatus: {

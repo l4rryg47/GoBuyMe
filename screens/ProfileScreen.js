@@ -5,6 +5,9 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../firebase';
 import * as ImagePicker from 'expo-image-picker';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default function ProfileScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
@@ -107,7 +110,7 @@ export default function ProfileScreen({ navigation }) {
       {/* Back Button */}
       <Pressable 
         style={styles.backButton}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate('Home', { screen: 'HomeMain' })}
       >
         <Text style={styles.backButtonText}>← Back</Text>
       </Pressable>
@@ -119,7 +122,7 @@ export default function ProfileScreen({ navigation }) {
       <View style={styles.profileInfo}>
         {isEditing ? (
           <>
-            <Text style={styles.label}>Name:</Text>
+            <Text style={styles.label}>Edit Name:</Text>
             <TextInput
               style={styles.input}
               value={name}
@@ -127,7 +130,7 @@ export default function ProfileScreen({ navigation }) {
               placeholder="Your Name"
             />
 
-            <Text style={styles.label}>Phone:</Text>
+            <Text style={styles.label}>Edit Phone:</Text>
             <TextInput
               style={styles.input}
               value={phone}
@@ -137,10 +140,10 @@ export default function ProfileScreen({ navigation }) {
             />
 
             <Pressable 
-              style={[styles.button, { backgroundColor: '#4ECDC4' }]}
+              style={styles.button1}
               onPress={handleSave}
             >
-              <Text style={styles.buttonText}>Save Changes</Text>
+              <Text style={styles.buttonText1}>Save Changes</Text>
             </Pressable>
           </>
         ) : (
@@ -171,22 +174,38 @@ export default function ProfileScreen({ navigation }) {
               style={[styles.button, { marginTop: 20 }]}
               onPress={() => setIsEditing(true)}
             >
+              <View style={styles.profileOptions}>
+              <FontAwesome5 name="user-edit" size={24} color="#0b3948" />
               <Text style={styles.buttonText}>Edit Profile</Text>
+              </View>
+              
             </Pressable>
-      <Pressable style={styles.button} onPress={() => navigation.navigate('ResetPassword')}>
-        <Text style={styles.buttonText}>Reset Password</Text>
+      <Pressable style={styles.button} onPress={() => navigation.navigate('Home', { screen: 'ResetPassword' })}>
+      <View style={styles.profileOptions}>
+      <Entypo name="lock" size={24} color="#0b3948" />
+      <Text style={styles.buttonText}>Reset Password</Text>
+      </View>
+      
       </Pressable>
       <Pressable 
         style={styles.button}
-        onPress={handleLogout}
+        onPress={() => navigation.navigate('Home', { screen: 'MyAddresses' })}
       >
-        <Text style={styles.buttonText}>Log Out</Text>
+        <View style={styles.profileOptions}>
+        <FontAwesome6 name="location-dot" size={20} color="#0b3948" />
+        <Text style={styles.buttonText}>Edit My Addresses</Text>
+        </View>
+        
       </Pressable>
       <Pressable 
         style={styles.button}
-        onPress={handleLogout}
+        onPress={() => navigation.navigate('Home', { screen: 'Notifications' })}
       >
+        <View style={styles.profileOptions}>
+        <Entypo name="chat" size={24} color="#0B3948" />
         <Text style={styles.buttonText}>My Notifications</Text>
+        </View>
+        
       </Pressable>
     </View>
   );
@@ -196,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF0EB',
   },
   backButton: {
     position: 'absolute',
@@ -242,11 +261,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#0b3948',
   },
   value2: {
     fontSize: 18,
     fontStyle: 'italic',
     marginBottom: 5,
+    color: '#0b3948',
   },
   input: {
     height: 40,
@@ -259,10 +280,24 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'flex-start',
     marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    marginBottom: 10,
+    paddingBottom: 10,
+  },
+  button1: {
+    alignItems: 'flex-start',
+    marginTop: 10,
+    backgroundColor: 'green',
   },
   buttonText: {
     color: '#0B3948',
     fontSize: 16,
+  },
+  buttonText1: {
+    color: '#fff',
+    fontSize: 16,
+    padding: 10,
   },
   link: {
     color: '#FF521B',
@@ -287,5 +322,9 @@ const styles = StyleSheet.create({
     width: 180,
     borderRadius: 90,
   },
-
+  profileOptions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
 });

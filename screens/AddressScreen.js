@@ -96,13 +96,7 @@ export default function AddressScreen({ navigation, route }) {
       </ScrollView>
       <Pressable
         style={styles.nextButton}
-        onPress={() => {
-          if (selectedAddress) {
-            navigation.navigate('NextScreen', { selectedAddress });
-          } else {
-            alert('Please select an address before proceeding.');
-          }
-        }}
+        onPress={() => navigation.navigate('VendorList')}
       >
         <Text style={styles.nextButtonText}>Next</Text>
       </Pressable>
@@ -114,7 +108,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#FFF9F7',
+    backgroundColor: '#FFF0EB',
   },
   header: {
     flexDirection: 'row',

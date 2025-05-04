@@ -255,7 +255,7 @@ export default function VendorListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F7',
+    backgroundColor: '#FFF0EB',
   },
   loadingContainer: {
     justifyContent: 'center',

@@ -26,6 +26,7 @@ import MealDetailsScreen from './screens/MealDetailsScreen';
 import PaymentOptionsScreen from './screens/PaymentOptionsScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import MyAddressesScreen from './screens/MyAddressesScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -55,7 +56,9 @@ function HomeStack() {
       <Stack.Screen name="MealDetails" component={MealDetailsScreen} />
       <Stack.Screen name="Address" component={AddressScreen} />
       <Stack.Screen name="MyAddresses" component={MyAddressesScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="Cart" component={CartDetails} />
       <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
       <Stack.Screen name="Confirmation" component={ConfirmationScreen} />

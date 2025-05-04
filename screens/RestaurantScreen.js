@@ -274,7 +274,7 @@ export default function RestaurantScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F7',
+    backgroundColor: '#FFF0EB',
   },
   header: {
     flexDirection: 'row',

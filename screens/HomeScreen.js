@@ -156,7 +156,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFDFD5',
+    backgroundColor: '#FFF0EB',
   },
   header: {
     flexDirection: 'row',
