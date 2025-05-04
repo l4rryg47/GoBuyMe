@@ -55,11 +55,11 @@ export default function HomeScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => navigation.toggleDrawer()}>
-          <MaterialIcons name="menu" size={28} color="#FF521B" />
+          <MaterialIcons name="menu" size={28} color="#0B3948" />
         </Pressable>
         <Text style={styles.logoText}>GoBuyMe</Text>
         <Pressable onPress={() => Linking.openURL('tel:08037674195')}>
-          <FontAwesome name="phone" size={24} color="#FF521B" />
+          <FontAwesome name="phone" size={24} color="#0B3948" />
         </Pressable>
       </View>
 
@@ -113,40 +113,40 @@ export default function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('Chat')}
       >
         <View style={styles.menuContent}>
-          <Entypo name="chat" size={24} color="#FF521B" />
+          <Entypo name="chat" size={24} color="#0B3948" />
           <Text>Chat with us</Text>
         </View>
-        <FontAwesome name="angle-right" size={24} color="black" />
+        <FontAwesome name="angle-right" size={24} color="#0B3948" />
       </Pressable>
       <Pressable
         style={styles.menuContainer}
         onPress={() => navigation.navigate('Cart')}
       >
         <View style={styles.menuContent}>
-          <FontAwesome name="shopping-basket" size={24} color="#FF521B" />
+          <FontAwesome name="shopping-basket" size={24} color="#0B3948" />
           <Text>My Basket</Text>
         </View>
-        <FontAwesome name="angle-right" size={24} color="black" />
+        <FontAwesome name="angle-right" size={24} color="#0B3948" />
       </Pressable>
       <Pressable
         style={styles.menuContainer}
         onPress={() => navigation.navigate('Favorites')}
       >
         <View style={styles.menuContent}>
-          <AntDesign name="like1" size={24} color="#FF521B" />
+          <AntDesign name="like1" size={24} color="#0B3948" />
           <Text>My Favorites</Text>
         </View>
-        <FontAwesome name="angle-right" size={24} color="black" />
+        <FontAwesome name="angle-right" size={24} color="#0B3948" />
       </Pressable>
       <Pressable
         style={styles.menuContainer}
         onPress={() => navigation.navigate('OrderHistory')}
       >
         <View style={styles.menuContent}>
-          <Feather name="list" size={24} color="#FF521B" />
+          <Feather name="list" size={24} color="#0B3948" />
           <Text>My Order History</Text>
         </View>
-        <FontAwesome name="angle-right" size={24} color="black" />
+        <FontAwesome name="angle-right" size={24} color="#0B3948" />
       </Pressable>
       <View style={{ padding: 5 }}></View>
     </View>
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 16,
-    color: '#0051FF',
+    color: '#58A4B0',
   },
   newOrderButton: {
     backgroundColor: '#FF521B',
