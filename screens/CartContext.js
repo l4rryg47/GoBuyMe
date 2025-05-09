@@ -6,18 +6,42 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [restaurantCarts, setRestaurantCarts] = useState({});
 
-  const addToCart = (restaurantId, price) => {
-    setRestaurantCarts(prev => ({
-      ...prev,
-      [restaurantId]: {
-        total: (prev[restaurantId]?.total || 0) + parseFloat(price),
-        items: [...(prev[restaurantId]?.items || []), { 
-          id: Date.now().toString(),
-          price: parseFloat(price),
-          timestamp: new Date().toISOString()
-        }]
-      }
-    }));
+  const addToCart = (restaurantId, meal, selectedExtras, selectedProteins) => {
+    setRestaurantCarts((prevCarts) => {
+      const cart = prevCarts[restaurantId] || { total: 0, items: [] };
+
+      // Create a new cart item
+      const newItem = {
+        id: meal.id,
+        name: meal.name,
+        price: meal.price,
+        extras: selectedExtras.map((key) => ({
+          id: key,
+          name: extras[key].name,
+          price: extras[key].price,
+        })),
+        proteins: selectedProteins.map((key) => ({
+          id: key,
+          name: protein[key].name,
+          price: protein[key].price,
+        })),
+      };
+
+      // Calculate the total price for the new item
+      const itemTotal =
+        newItem.price +
+        newItem.extras.reduce((total, extra) => total + extra.price, 0) +
+        newItem.proteins.reduce((total, protein) => total + protein.price, 0);
+
+      // Add the new item to the cart
+      const updatedItems = [...cart.items, newItem];
+      const updatedTotal = cart.total + itemTotal;
+
+      return {
+        ...prevCarts,
+        [restaurantId]: { total: updatedTotal, items: updatedItems },
+      };
+    });
   };
 
   const getCartTotal = (restaurantId) => {

@@ -165,7 +165,7 @@ export default function MealDetailsScreen({ route, navigation }) {
       
       <Pressable 
         style={styles.cartIcon}
-        onPress={() => navigation.navigate('Cart', { restaurantId })}
+        onPress={() => navigation.navigate('Cart', { restaurantId, cartTotal })}
       >
         <FontAwesome name="shopping-basket" size={42} color="#2e1e0f" />
         <Text style={styles.cartTotal}>
