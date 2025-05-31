@@ -21,7 +21,7 @@ export default function AppearancePersonalization({ navigation }) {
           <MaterialIcons name="arrow-back" size={28} color="#0B3948" />
         </Pressable>
         <Text style={styles.title}>Appearance & Personalization</Text>
-        <View style={{ width: 28 }} /> {/* Spacer */}
+        <View style={{ width: 28 }} />
       </View>
     {/* Preview */}
       <View style={styles.preview}>

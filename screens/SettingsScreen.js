@@ -4,6 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Entypo from '@expo/vector-icons/Entypo';
+import Octicons from '@expo/vector-icons/Octicons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const SettingsScreen = ({ navigation }) => {
 	return (
@@ -42,22 +45,22 @@ const SettingsScreen = ({ navigation }) => {
 					</View>
 					<Pressable style={styles.listView}
           onPress={() => navigation.navigate('NotificationsOptions')}>
-          <Entypo name="eye" size={18} color="#B3B3B3" />
-						<Text>Notofication Options</Text>
+          <FontAwesome6 name="gear" size={24} color="#B3B3B3" />
+						<Text>Notification Options</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
           onPress={() => navigation.navigate('PushNotifications')}>
-						<Ionicons name="language-outline" size={18} color="#B3B3B3" />
+						<FontAwesome name="bell" size={24} color="#B3B3B3" />
 						<Text>Push Notifications</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
           onPress={() => navigation.navigate('Chat')}>
-						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
+						<MaterialIcons name="support-agent" size={24} color="#B3B3B3" />
 						<Text>Live support</Text>
 					</Pressable>
           <Pressable style={styles.listView}
           onPress={() => navigation.navigate('OffersScreen')}>
-						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
+						<FontAwesome6 name="gift" size={24} color="#B3B3B3" />
 						<Text>Offers</Text>
 					</Pressable>
 				</View>
@@ -66,40 +69,32 @@ const SettingsScreen = ({ navigation }) => {
 						<Text style={styles.title}>Privacy</Text>
 					</View>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
-          <Entypo name="eye" size={18} color="#B3B3B3" />
+          onPress={() => navigation.navigate('Permissions')}>
+          <FontAwesome6 name="universal-access" size={24} color="#B3B3B3" />
 						<Text>Permissions</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
-						<Ionicons name="language-outline" size={18} color="#B3B3B3" />
+          onPress={() => navigation.navigate('AccountsPasswordsSettings')}>
+						<Entypo name="lock" size={24} color="#B3B3B3" />
 						<Text>Accounts and Password Settings</Text>
 					</Pressable>
-					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('DataStorage')}>
-						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
-						<Text>Data and Storage</Text>
-					</Pressable>
+					
 				</View>
         <View style={styles.generalSettings}>
 					<View>
 						<Text style={styles.title}>Legal</Text>
 					</View>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
-          <Entypo name="eye" size={18} color="#B3B3B3" />
+          onPress={() => navigation.navigate('AboutScreen')}>
+          <Entypo name="info-with-circle" size={18} color="#B3B3B3" />
 						<Text>About</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
-						<Ionicons name="language-outline" size={18} color="#B3B3B3" />
+          onPress={() => navigation.navigate('TermsService')}>
+						<Octicons name="law" size={24} color="#B3B3B3" />
 						<Text>Terms of Service</Text>
 					</Pressable>
-					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
-						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
-						<Text>Data and Storage</Text>
-					</Pressable>
+					
 				</View>
 			</ScrollView>
 		</View>

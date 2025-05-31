@@ -32,6 +32,10 @@ import LanguageInput from './screens/LanguageInput';
 import DataStorage from './screens/DataStorage';
 import NotificationsOptions from './screens/NotificationsOptions';
 import PushNotifications from './screens/PushNotifications';
+import TermsService from './screens/TermsService';
+import AboutScreen from './screens/AboutScreen';
+import AccountsPasswordsSettings from './screens/AccountsPasswordsSettings';
+import Permissions from './screens/Permissions';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 
@@ -162,7 +166,11 @@ export default function App() {
         <Stack.Screen name="NotificationsOptions" component={NotificationsOptions} />
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="PushNotifications" component={PushNotifications} />        
+        <Stack.Screen name="AboutScreen" component={AboutScreen} />                
+        <Stack.Screen name="AccountsPasswordsSettings" component={AccountsPasswordsSettings} />                
         <Stack.Screen name="OffersScreen" component={OffersScreen} />                
+        <Stack.Screen name="Permissions" component={Permissions} />                
+        <Stack.Screen name="TermsService" component={TermsService} />                
       </Stack.Navigator>
     </NavigationContainer>
   );
