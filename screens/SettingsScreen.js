@@ -21,17 +21,17 @@ const SettingsScreen = ({ navigation }) => {
 						<Text style={styles.title}>General Settings</Text>
 					</View>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('Appearance')}>
             <Entypo name="eye" size={18} color="#B3B3B3" />
 						<Text>Appearance</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('Language')}>
 						<Ionicons name="language-outline" size={18} color="#B3B3B3" />
 						<Text>Language and Input Settings</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('DataStorage')}>
 						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
 						<Text>Data and Storage</Text>
 					</Pressable>
@@ -41,22 +41,22 @@ const SettingsScreen = ({ navigation }) => {
 						<Text style={styles.title}>Notifications</Text>
 					</View>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('NotificationsOptions')}>
           <Entypo name="eye" size={18} color="#B3B3B3" />
 						<Text>Notofication Options</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('PushNotifications')}>
 						<Ionicons name="language-outline" size={18} color="#B3B3B3" />
 						<Text>Push Notifications</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('Chat')}>
 						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
 						<Text>Live support</Text>
 					</Pressable>
           <Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('OffersScreen')}>
 						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
 						<Text>Offers</Text>
 					</Pressable>
@@ -76,7 +76,7 @@ const SettingsScreen = ({ navigation }) => {
 						<Text>Accounts and Password Settings</Text>
 					</Pressable>
 					<Pressable style={styles.listView}
-          onPress={() => navigation.navigate('Dummy')}>
+          onPress={() => navigation.navigate('DataStorage')}>
 						<FontAwesome5 name="database" size={18} color="#B3B3B3" />
 						<Text>Data and Storage</Text>
 					</Pressable>

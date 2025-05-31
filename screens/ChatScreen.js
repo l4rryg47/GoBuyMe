@@ -117,7 +117,7 @@ const ChatScreen = ({ navigation }) => {
       style={styles.container}
       keyboardVerticalOffset={90}
     >
-      <Pressable style={styles.backButton} onPress={() => navigation.navigate('HomeMain')}>
+      <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
               <Text style={styles.backButtonText}>← Back</Text>
             </Pressable>
       <View style={styles.header}>

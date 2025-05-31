@@ -27,6 +27,11 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import ResetPasswordSuccessScreen from './screens/ResetPasswordSuccessScreen';
+import AppearancePersonalization from './screens/AppearancePersonalization';
+import LanguageInput from './screens/LanguageInput';
+import DataStorage from './screens/DataStorage';
+import NotificationsOptions from './screens/NotificationsOptions';
+import PushNotifications from './screens/PushNotifications';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 
@@ -151,6 +156,13 @@ export default function App() {
       >
         <Stack.Screen name="Drawer" component={DrawerNavigator} />
         <Stack.Screen name="Dummy" component={DummyScreen} />
+        <Stack.Screen name="Appearance" component={AppearancePersonalization} />
+        <Stack.Screen name="Language" component={LanguageInput} />
+        <Stack.Screen name="DataStorage" component={DataStorage} />
+        <Stack.Screen name="NotificationsOptions" component={NotificationsOptions} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="PushNotifications" component={PushNotifications} />        
+        <Stack.Screen name="OffersScreen" component={OffersScreen} />                
       </Stack.Navigator>
     </NavigationContainer>
   );
