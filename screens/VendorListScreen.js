@@ -47,6 +47,7 @@ export default function VendorListScreen({ navigation }) {
   const [meals, setMeals] = useState([]); // New state for meals
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [stores, setStores] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,9 +69,17 @@ export default function VendorListScreen({ navigation }) {
           imageUrl: doc.data().imageUrl,
           restaurantId: doc.data().restaurantId // Keep reference if needed
         }));
+
+        // Fetch stores (Emart)
+        const storesSnapshot = await getDocs(collection(db, 'stores'));
+        const storesData = storesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
         
         setRestaurants(restaurantsData);
         setMeals(mealsData);
+        setStores(storesData);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data: ", err);
@@ -81,6 +90,41 @@ export default function VendorListScreen({ navigation }) {
 
     fetchData();
   }, []);
+
+    // Filter stores based on search (reuse restaurantSearch)
+  const filteredStores = stores.filter(store => {
+    const category = String(store.category || '').toLowerCase();
+    const name = String(store.name || '').toLowerCase();
+    const searchTerm = restaurantSearch.toLowerCase().trim();
+    return (
+      name.includes(searchTerm) ||
+      category.includes(searchTerm)
+    );
+  });
+
+  // Render each store item (same as restaurant)
+  const renderStoreItem = ({ item }) => (
+    <Pressable
+      style={styles.restaurantCard}
+      onPress={() => navigation.navigate('EmartScreen')}
+    >
+      <Image
+        source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/placeholder.jpg')}
+        style={styles.restaurantImage}
+      />
+      <View style={styles.restaurantInfo}>
+        <Text style={styles.restaurantName}>{item.name}</Text>
+        <Text style={styles.restaurantCuisine}>{item.category || 'General Store'}</Text>
+        <View style={styles.restaurantMeta}>
+          <View style={styles.ratingContainer}>
+            <MaterialIcons name="star" size={16} color="#FFD700" />
+            <Text style={styles.ratingText}>{item.rating || 'N/A'}</Text>
+          </View>
+          <Text style={styles.deliveryTime}>{item.deliveryTime || 'Time not specified'}</Text>
+        </View>
+      </View>
+    </Pressable>
+  );
 
   // Filter meals based on search
   const filteredMeals = meals.filter(meal =>
@@ -179,7 +223,7 @@ export default function VendorListScreen({ navigation }) {
             styles.tabText,
             activeTab === 'restaurants' && styles.activeTabText
           ]}>
-            Restaurants
+            Branches
           </Text>
         </Pressable>
 
@@ -210,6 +254,18 @@ export default function VendorListScreen({ navigation }) {
                 placeholder="Search restaurants..."
                 value={restaurantSearch}
                 onChangeText={setRestaurantSearch}
+              />
+            </View>
+            <View>
+              {/*Emart list content*/}
+              <Text style={{fontWeight: 'bold', fontSize: 16, color: '#FF521B', marginBottom: 8}}>Emart Stores</Text>
+              <FlatList
+                data={filteredStores}
+                renderItem={renderStoreItem}
+                keyExtractor={item => item.id}
+                scrollEnabled={false}
+                contentContainerStyle={styles.restaurantList}
+                key="store-list"
               />
             </View>
             {/* Restaurant list content */}

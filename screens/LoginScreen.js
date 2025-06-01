@@ -51,9 +51,14 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.loginButtonText}>Login</Text>
           </Pressable>
 
-          <Pressable onPress={() => navigation.navigate('ResetPassword')}>
+          <View style={styles.subSection}>
+            <Pressable onPress={() => navigation.navigate('ResetPassword')}>
             <Text style={styles.link}>Forgot Password?</Text>
           </Pressable>
+          <Pressable onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.link}>Don't have an account? Register</Text>
+          </Pressable>
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -103,7 +108,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   link: {
-    color: '#FF521B',
+    color: '#C6CCB2',
     textAlign: 'center',
+    fontSize: 13
   },
+  subSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+  }
 });

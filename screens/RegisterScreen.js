@@ -27,8 +27,8 @@ export default function RegisterScreen({ navigation }) {
         phone,
         createdAt: new Date(),
       });
-
-      navigation.replace('Home');
+      Alert.alert('Registration Successful. Login to quench that hunger!')
+      navigation.replace('Login');
     } catch (error) {
       Alert.alert('Registration Failed', error.message);
     }

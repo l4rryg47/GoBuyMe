@@ -22,6 +22,7 @@ import PaymentOptionsScreen from './screens/PaymentOptionsScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import MyAddressesScreen from './screens/MyAddressesScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import LandingScreen from './screens/LandingScreen';
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -36,6 +37,7 @@ import TermsService from './screens/TermsService';
 import AboutScreen from './screens/AboutScreen';
 import AccountsPasswordsSettings from './screens/AccountsPasswordsSettings';
 import Permissions from './screens/Permissions';
+import EmartScreen from './screens/EmartScreen';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 
@@ -52,6 +54,7 @@ function HomeStack() {
         }}
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
@@ -73,6 +76,9 @@ function HomeStack() {
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="TermsService" component={TermsService} />
+        <Stack.Screen name="Permissions" component={Permissions} />
+        <Stack.Screen name="EmartScreen" component={EmartScreen} />        
       </Stack.Navigator>
     </CartProvider>
   );

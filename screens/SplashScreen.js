@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 
 export default function SplashScreen({ navigation }) {
   setTimeout(() => {
-    navigation.replace('Login');
+    navigation.replace('Landing');
   }, 5000);
 
   return (
