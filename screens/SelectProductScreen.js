@@ -1,231 +1,427 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Pressable, FlatList } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	Pressable,
+	FlatList,
+	Image,
+	TextInput,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function SelectProductScreen({ navigation, route }) {
-    const [categories, setCategories] = useState([]);
-    const [activeCategory, setActiveCategory] = useState(route?.params?.selectedCategory);
-    const [activeSubcategory, setActiveSubcategory] = useState(null);
+	const [categories, setCategories] = useState([]);
+	const [activeCategory, setActiveCategory] = useState(
+		route?.params?.selectedCategory
+	);
+	const [activeSubcategory, setActiveSubcategory] = useState(null);
+	const [quantities, setQuantities] = useState({});
 
-    // Get storeId from navigation params or fallback to a default
-    const storeId = route?.params?.storeId || 'J3GO05mnhnoccDG9Bchc';
+	// Get storeId from navigation params or fallback to a default
+	const storeId = route?.params?.storeId || 'J3GO05mnhnoccDG9Bchc';
 
-    useEffect(() => {
-        const fetchStore = async () => {
-            try {
-                const storeRef = doc(db, 'stores', storeId);
-                const storeSnap = await getDoc(storeRef);
-                if (storeSnap.exists()) {
-                    const storeData = storeSnap.data();
-                    let categoriesArray = [];
-                    if (
-                        storeData.categories &&
-                        typeof storeData.categories === 'object'
-                    ) {
-                        categoriesArray = Object.values(storeData.categories);
-                    }
-                    setCategories(categoriesArray);
-                } else {
-                    setCategories([]);
-                }
-            } catch (err) {
-                console.log('Error fetching store:', err);
-                setCategories([]);
-            }
-        };
-        fetchStore();
-    }, [storeId]);
+	const handleQuantityChange = (key, value) => {
+		setQuantities((prev) => ({
+			...prev,
+			[key]: value.replace(/[^0-9]/g, ''), // Only allow numbers
+		}));
+	};
 
-    const sortedCategories = categories
-        .slice()
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    const selectedIndex = sortedCategories.findIndex(
-        (item) => item.name === activeCategory
-    );
+	const increment = (key) => {
+		setQuantities((prev) => ({
+			...prev,
+			[key]: String(parseInt(prev[key] || '0', 10) + 1),
+		}));
+	};
 
-    // Find the active top-level category object (e.g., alcohol)
-    const activeCategoryObj = sortedCategories.find(
-        (cat) => cat.name === activeCategory
-    );
+	const decrement = (key) => {
+		setQuantities((prev) => ({
+			...prev,
+			[key]: String(Math.max(0, parseInt(prev[key] || '0', 10) - 1)),
+		}));
+	};
 
-    // Get subcategory keys (e.g., beer, wine, etc.), filter out 'name' and other non-subcategory keys
-    const subcategoryKeys = activeCategoryObj
-        ? Object.keys(activeCategoryObj).filter(
-                (key) => key !== 'name' && typeof activeCategoryObj[key] === 'object'
-          )
-        : [];
+	useEffect(() => {
+		const fetchStore = async () => {
+			try {
+				const storeRef = doc(db, 'stores', storeId);
+				const storeSnap = await getDoc(storeRef);
+				if (storeSnap.exists()) {
+					const storeData = storeSnap.data();
+					let categoriesArray = [];
+					if (
+						storeData.categories &&
+						typeof storeData.categories === 'object'
+					) {
+						categoriesArray = Object.values(storeData.categories);
+					}
+					setCategories(categoriesArray);
+				} else {
+					setCategories([]);
+				}
+			} catch (err) {
+				console.log('Error fetching store:', err);
+				setCategories([]);
+			}
+		};
+		fetchStore();
+	}, [storeId]);
 
-    // Build subcategories array with their names and order
-    const subcategories = subcategoryKeys.map((key) => {
-        const subcat = activeCategoryObj[key];
-        return { key, name: subcat.name || key, order: subcat.order ?? 0 };
-    }).sort((a, b) => a.order - b.order);
+	const sortedCategories = categories
+		.slice()
+		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+	const selectedIndex = sortedCategories.findIndex(
+		(item) => item.name === activeCategory
+	);
 
-    // Set first subcategory as active on mount or when activeCategory changes
-    useEffect(() => {
-        if (subcategories.length > 0) {
-            setActiveSubcategory(subcategories[0].key);
-        } else {
-            setActiveSubcategory(null);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeCategory, activeCategoryObj && subcategories.length]);
+	// Find the active top-level category object (e.g., alcohol)
+	const activeCategoryObj = sortedCategories.find(
+		(cat) => cat.name === activeCategory
+	);
 
-    const renderCategory = ({ item }) => (
-        <Pressable
-            onPress={() => setActiveCategory(item.name)}
-            style={[
-                styles.categoryItem,
-                item.name === activeCategory && styles.selectedCategoryItem,
-            ]}
-        >
-            <Text
-                style={[
-                    styles.categoryName,
-                    item.name === activeCategory && styles.selectedCategoryName,
-                ]}
-            >
-                {item.name}
-            </Text>
-        </Pressable>
-    );
+	// Get subcategory keys (e.g., beer, wine, etc.), filter out 'name' and other non-subcategory keys
+	const subcategoryKeys = activeCategoryObj
+		? Object.keys(activeCategoryObj).filter(
+				(key) => key !== 'name' && typeof activeCategoryObj[key] === 'object'
+		  )
+		: [];
 
-    const renderSubcategory = ({ item }) => (
-        <Pressable
-            style={[
-                styles.subcategoryItem,
-                item.key === activeSubcategory && styles.selectedSubcategoryItem,
-            ]}
-            onPress={() => setActiveSubcategory(item.key)}
-        >
-            <Text
-                style={[
-                    styles.subcategoryName,
-                    item.key === activeSubcategory && styles.selectedSubcategoryName,
-                ]}
-            >
-                {item.name}
-            </Text>
-        </Pressable>
-    );
+	// Build subcategories array with their names and order
+	const subcategories = subcategoryKeys
+		.map((key) => {
+			const subcat = activeCategoryObj[key];
+			return { key, name: subcat.name || key, order: subcat.order ?? 0 };
+		})
+		.sort((a, b) => a.order - b.order);
 
-    return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <Pressable onPress={() => navigation.goBack()}>
-                    <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
-                </Pressable>
-                <Text style={styles.locationText}>Select Products</Text>
-                <View style={{ width: 24 }} />
+	// Set first subcategory as active on mount or when activeCategory changes
+	useEffect(() => {
+		if (subcategories.length > 0) {
+			setActiveSubcategory(subcategories[0].key);
+		} else {
+			setActiveSubcategory(null);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeCategory, activeCategoryObj && subcategories.length]);
+
+	const renderCategory = ({ item }) => (
+		<Pressable
+			onPress={() => setActiveCategory(item.name)}
+			style={[
+				styles.categoryItem,
+				item.name === activeCategory && styles.selectedCategoryItem,
+			]}
+		>
+			<Text
+				style={[
+					styles.categoryName,
+					item.name === activeCategory && styles.selectedCategoryName,
+				]}
+			>
+				{item.name}
+			</Text>
+		</Pressable>
+	);
+
+	const renderSubcategory = ({ item }) => (
+		<Pressable
+			style={[
+				styles.subcategoryItem,
+				item.key === activeSubcategory && styles.selectedSubcategoryItem,
+			]}
+			onPress={() => setActiveSubcategory(item.key)}
+		>
+			<Text
+				style={[
+					styles.subcategoryName,
+					item.key === activeSubcategory && styles.selectedSubcategoryName,
+				]}
+			>
+				{item.name}
+			</Text>
+		</Pressable>
+	);
+
+	// Get products for the active subcategory
+	const activeSubcategoryObj =
+		activeCategoryObj && activeSubcategory
+			? activeCategoryObj[activeSubcategory]
+			: null;
+
+	// If products are stored as a map (e.g., beer1, beer2, ...), convert to array
+	const products =
+		activeSubcategoryObj && typeof activeSubcategoryObj === 'object'
+			? Object.values(activeSubcategoryObj).filter(
+					(item) => typeof item === 'object' && item.name // filter out non-product fields
+			  )
+			: [];
+
+	// Render each product card
+	const renderProductCard = ({ item }) => (
+		<View style={styles.productCard}>
+			<View style={styles.imagenTitle}>
+				<Image
+					source={
+						item.imgUrl
+							? { uri: item.imgUrl }
+							: require('../assets/placeholder.jpg')
+					}
+					style={styles.productImage}
+					resizeMode="cover"
+				/>
+				<Text style={styles.productName}>{item.name}</Text>
+			</View>
+			<View style={styles.pricenSize}>
+                <Text style={styles.productSize}>{item.size}</Text>
+			<Text style={styles.productPrice}>₦{item.price}</Text>
             </View>
-            {/* Horizontal category list */}
-            <View style={styles.categoryList}>
-                <FlatList
-                    data={sortedCategories}
-                    renderItem={renderCategory}
-                    keyExtractor={(item, idx) => item.name + idx}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.horizontalList}
-                    initialScrollIndex={selectedIndex > 0 ? selectedIndex : 0}
-                    getItemLayout={(_, index) => ({
-                        length: 100,
-                        offset: 100 * index,
-                        index,
-                    })}
-                />
-            </View>
-            {/* Horizontal subcategory list with highlight */}
-            <View style={styles.subcategoryList}>
-                <FlatList
-                    data={subcategories}
-                    renderItem={renderSubcategory}
-                    keyExtractor={(item, idx) => item.key + idx}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.horizontalList}
-                />
-            </View>
-        </View>
-    );
+			<View style={styles.addToCartAlt}>
+				<Pressable
+					style={styles.cartButton}
+					onPress={() => decrement(item.name)}
+				>
+					<Text style={styles.cartButtonText}>-</Text>
+				</Pressable>
+				<View style={styles.quantityBox}>
+					<Text style={styles.quantityText}>
+						{quantities[item.name] || '0'}
+					</Text>
+				</View>
+				<Pressable
+					style={styles.cartButton}
+					onPress={() => increment(item.name)}
+				>
+					<Text style={styles.cartButtonText}>+</Text>
+				</Pressable>
+			</View>
+		</View>
+	);
+
+	return (
+		<View style={styles.container}>
+			{/* Header */}
+			<View style={styles.header}>
+				<Pressable onPress={() => navigation.goBack()}>
+					<MaterialIcons name="arrow-back" size={24} color="#FF521B" />
+				</Pressable>
+				<Text style={styles.locationText}>Select Products</Text>
+				<View style={{ width: 24 }} />
+			</View>
+			{/* Horizontal category list */}
+			<View style={styles.categoryList}>
+				<FlatList
+					data={sortedCategories}
+					renderItem={renderCategory}
+					keyExtractor={(item, idx) => item.name + idx}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={styles.horizontalList}
+					initialScrollIndex={selectedIndex > 0 ? selectedIndex : 0}
+					getItemLayout={(_, index) => ({
+						length: 100,
+						offset: 100 * index,
+						index,
+					})}
+				/>
+			</View>
+			{/* Horizontal subcategory list with highlight */}
+			<View style={styles.subcategoryList}>
+				<FlatList
+					data={subcategories}
+					renderItem={renderSubcategory}
+					keyExtractor={(item, idx) => item.key + idx}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={styles.horizontalList}
+				/>
+			</View>
+			<View style={styles.productsGrid}>
+				<FlatList
+					data={products}
+					renderItem={renderProductCard}
+					keyExtractor={(item, idx) => item.name + idx}
+					numColumns={3}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 24 }}
+					ListEmptyComponent={
+						<Text style={{ textAlign: 'center', color: '#aaa', marginTop: 24 }}>
+							No products found.
+						</Text>
+					}
+				/>
+			</View>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF0EB',
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+	container: {
+		flex: 1,
+		backgroundColor: '#FFF0EB',
+	},
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		padding: 16,
+		backgroundColor: 'white',
+		borderBottomWidth: 1,
+		borderBottomColor: '#F0F0F0',
+		marginTop: 40,
+	},
+	locationText: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: '#FF521B',
+	},
+	categoryList: {
+		paddingVertical: 8,
+		backgroundColor: '#E14E1F',
+	},
+	horizontalList: {
+		paddingHorizontal: 16,
+	},
+	categoryItem: {
+		paddingVertical: 4,
+		paddingHorizontal: 10,
+		borderRadius: 4,
+		backgroundColor: 'transparent',
+		marginRight: 3,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	categoryName: {
+		fontSize: 14,
+		color: 'white',
+	},
+	selectedCategoryItem: {
+		backgroundColor: 'white',
+		borderColor: '#FF521B',
+		borderWidth: 1,
+	},
+	selectedCategoryName: {
+		color: '#E14E1F',
+	},
+	subcategoryList: {
+		padding: 8,
+		backgroundColor: '#FFF',
+	},
+	subcategoryItem: {
+		paddingVertical: 4,
+		paddingHorizontal: 10,
+		borderRadius: 4,
+		backgroundColor: 'transparent',
+		marginRight: 3,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	selectedSubcategoryItem: {
+		backgroundColor: '#E14E1F',
+		borderColor: '#FF521B',
+		borderWidth: 1,
+	},
+	subcategoryName: {
+		fontSize: 14,
+		color: '#E14E1F',
+	},
+	selectedSubcategoryName: {
+		color: 'white',
+	},
+	productCard: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FFF',
+		borderRadius: 10,
+		padding: 6,
+		margin: 6,
+		elevation: 2,
+		shadowColor: '#000',
+		shadowOpacity: 0.04,
+		shadowRadius: 2,
+		minWidth: 90,
+		maxWidth: 120,
+	},
+    imagenTitle: {
+        width: '100%',
+        height: 110,
         alignItems: 'center',
-        padding: 16,
-        backgroundColor: 'white',
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-        marginTop: 40,
+        padding: 4,
     },
-    locationText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#FF521B',
+	productImage: {
+		width: 64,
+		height: 64,
+		borderRadius: 8,
+		marginBottom: 8,
+		backgroundColor: '#F0F0F0',
+	},
+	productName: {
+		fontSize: 13,
+		color: '#0B3948',
+		textAlign: 'center',
+		fontWeight: '700',
+	},
+    pricenSize: {
+        marginTop: 15,
+        marginBottom: 10
     },
-    categoryList: {
-        paddingVertical: 8,
-        backgroundColor: '#E14E1F',
-    },
-    horizontalList: {
-        paddingHorizontal: 16,
-    },
-    categoryItem: {
-        paddingVertical: 4,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        backgroundColor: 'transparent',
-        marginRight: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    categoryName: {
-        fontSize: 14,
-        color: 'white',
-    },
-    selectedCategoryItem: {
-        backgroundColor: 'white',
-        borderColor: '#FF521B',
-        borderWidth: 1,
-    },
-    selectedCategoryName: {
-        color: '#E14E1F',
-    },
-    subcategoryList: {
-        padding: 8,
-        backgroundColor: '#FFF',
-    },
-    subcategoryItem: {
-        paddingVertical: 4,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        backgroundColor: 'transparent',
-        marginRight: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    selectedSubcategoryItem: {
-        backgroundColor: '#E14E1F',
-        borderColor: '#FF521B',
-        borderWidth: 1,
-    },
-    subcategoryName: {
-        fontSize: 14,
-        color: '#E14E1F',
-    },
-    selectedSubcategoryName: {
-        color: 'white',
-    },
+	productSize: {
+		minWidth: 100,
+		fontSize: 13,
+		color: '#0B3948',
+		textAlign: 'left',
+	},
+	productPrice: {
+		minWidth: 90,
+		fontSize: 13,
+		color: '#0B3948',
+		textAlign: 'left',
+	},
+	productsGrid: {
+		paddingHorizontal: 8,
+		paddingBottom: 24,
+		marginTop: 10,
+	},
+	addToCartAlt: {
+		marginLeft: 12,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: 8,
+	},
+	cartButton: {
+		width: 30,
+		height: 30,
+		borderRadius: 4,
+		backgroundColor: '#FF521B',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginHorizontal: 4,
+	},
+	cartButtonText: {
+		color: 'white',
+		fontSize: 20,
+		// fontWeight: 'bold',
+	},
+	quantityBox: {
+		minWidth: 30,
+		height: 30,
+		borderRadius: 4,
+		backgroundColor: '#FFF0EB',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginHorizontal: 4,
+		borderWidth: 1,
+		borderColor: '#FF521B',
+	},
+	quantityText: {
+		fontSize: 16,
+		color: '#FF521B',
+		// fontWeight: 'bold',
+	},
 });
 
 export default SelectProductScreen;
