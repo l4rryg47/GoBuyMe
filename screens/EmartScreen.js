@@ -47,21 +47,28 @@ useEffect(() => {
         fetchStore();
     }, [storeId]);
 
-    const filteredCategories = categories.filter(
-        (item) =>
-            item.name?.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredCategories = categories
+  .filter(item => item.name?.toLowerCase().includes(search.toLowerCase()))
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
     const renderCategory = ({ item }) => (
-        <View style={styles.productCard}>
-            <Image
-                source={item.imgUrl ? { uri: item.imgUrl } : PLACEHOLDER_IMAGE}
-                style={styles.productImage}
-                resizeMode="cover"
-            />
-            <Text style={styles.productName}>{item.name}</Text>
-        </View>
-    );
+    <Pressable
+        style={styles.productCard}
+        onPress={() =>
+  navigation.navigate('SelectProductScreen', {
+    categories, // pass the whole categories array
+    selectedCategory: item.name // or item.id if you have unique ids
+  })
+}
+    >
+        <Image
+            source={item.imgUrl ? { uri: item.imgUrl } : PLACEHOLDER_IMAGE}
+            style={styles.productImage}
+            resizeMode="cover"
+        />
+        <Text style={styles.productName}>{item.name}</Text>
+    </Pressable>
+);
 
     	const renderTodaysHoursWithStatus = () => {
 		if (!store?.openingHours) {

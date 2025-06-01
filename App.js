@@ -38,6 +38,7 @@ import AboutScreen from './screens/AboutScreen';
 import AccountsPasswordsSettings from './screens/AccountsPasswordsSettings';
 import Permissions from './screens/Permissions';
 import EmartScreen from './screens/EmartScreen';
+import SelectProductScreen from './screens/SelectProductScreen';
 import { CartProvider } from './screens/CartContext';
 import { MaterialIcons, FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 
@@ -79,6 +80,7 @@ function HomeStack() {
         <Stack.Screen name="TermsService" component={TermsService} />
         <Stack.Screen name="Permissions" component={Permissions} />
         <Stack.Screen name="EmartScreen" component={EmartScreen} />        
+        <Stack.Screen name="SelectProductScreen" component={SelectProductScreen} />
       </Stack.Navigator>
     </CartProvider>
   );

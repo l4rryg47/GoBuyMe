@@ -109,8 +109,8 @@ export default function VendorListScreen({ navigation }) {
       onPress={() => navigation.navigate('EmartScreen')}
     >
       <Image
-        source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/placeholder.jpg')}
-        style={styles.restaurantImage}
+        source={item.imageUrl ? { uri: item.imageUrl } : require('../assets/logo.png')}
+        style={styles.restaurantImage2}
       />
       <View style={styles.restaurantInfo}>
         <Text style={styles.restaurantName}>{item.name}</Text>
@@ -256,7 +256,6 @@ export default function VendorListScreen({ navigation }) {
                 onChangeText={setRestaurantSearch}
               />
             </View>
-            <View>
               {/*Emart list content*/}
               
               <FlatList
@@ -264,10 +263,9 @@ export default function VendorListScreen({ navigation }) {
                 renderItem={renderStoreItem}
                 keyExtractor={item => item.id}
                 scrollEnabled={false}
-                contentContainerStyle={styles.restaurantList}
+                contentContainerStyle={styles.restaurantList2}
                 key="store-list"
               />
-            </View>
             {/* Restaurant list content */}
             <FlatList
               data={filteredRestaurants}
@@ -417,6 +415,9 @@ const styles = StyleSheet.create({
   restaurantList: {
     paddingBottom: 20,
   },
+  restaurantList2: {
+    paddingBottom: 0,
+  },
   restaurantCard: {
     flexDirection: 'row',
     backgroundColor: 'white',
@@ -428,6 +429,11 @@ const styles = StyleSheet.create({
   restaurantImage: {
     width: 100,
     height: 100,
+  },
+    restaurantImage2: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain'
   },
   restaurantInfo: {
     flex: 1,
