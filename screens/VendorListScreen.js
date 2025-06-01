@@ -258,7 +258,7 @@ export default function VendorListScreen({ navigation }) {
             </View>
             <View>
               {/*Emart list content*/}
-              <Text style={{fontWeight: 'bold', fontSize: 16, color: '#FF521B', marginBottom: 8}}>Emart Stores</Text>
+              
               <FlatList
                 data={filteredStores}
                 renderItem={renderStoreItem}

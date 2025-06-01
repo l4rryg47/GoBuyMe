@@ -79,6 +79,8 @@ const styles = StyleSheet.create({
 		color: '#7F9172',
 	},
 	buttonContainer: {
+		marginLeft: 20,
+		marginRight: 20,
 		marginBottom: 40,
 	},
 	button: {
@@ -97,8 +99,8 @@ const styles = StyleSheet.create({
 		borderColor: '#FF521B',
 	},
 	buttonText: {
-		fontSize: 18,
-		fontWeight: '600',
+		fontSize: 16,
+		fontWeight: 'bold',
 		color: '#FFFFFF',
 	},
 	secondaryButtonText: {
