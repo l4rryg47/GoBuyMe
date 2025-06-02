@@ -11,6 +11,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { Alert } from 'react-native';
 
 function SelectProductScreen({ navigation, route }) {
 	const [categories, setCategories] = useState([]);
@@ -209,7 +210,16 @@ function SelectProductScreen({ navigation, route }) {
 		<View style={styles.container}>
 			{/* Header */}
 			<View style={styles.header}>
-				<Pressable onPress={() => navigation.goBack()}>
+				<Pressable onPress={() => {
+        Alert.alert(
+            'Leave this page?',
+            'Your cart for this store will be cleared if you go back. Are you sure?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Yes', style: 'destructive', onPress: () => navigation.goBack() },
+            ]
+        );
+    }}>
 					<MaterialIcons name="arrow-back" size={24} color="#FF521B" />
 				</Pressable>
 				<Text style={styles.locationText}>Select Products</Text>
@@ -262,7 +272,7 @@ function SelectProductScreen({ navigation, route }) {
 				<Pressable
 					style={styles.cartButtonFab}
 					onPress={() =>
-						navigation.navigate('eMartCartDetailsScreen', { cartItems })
+						navigation.navigate('EMartCartDetails', { cartItems })
 					}
 				>
 					<MaterialIcons name="shopping-cart" size={28} color="#fff" />

@@ -6,12 +6,17 @@ import {
 	Image,
 	Pressable,
 	StyleSheet,
+	TextInput,
 } from 'react-native';
 
-function eMartCartDetailsScreen({ navigation, route }) {
+function EMartCartDetails({ navigation, route }) {
 	// Expecting cartItems as an array of { name, imgUrl, price, size, quantity }
 	const cartItems = route?.params?.cartItems || [];
 	const [cartItemsState, setCartItemsState] = React.useState(cartItems);
+	const [discountCode, setDiscountCode] = React.useState('');
+	const [discountMessage, setDiscountMessage] = React.useState('');
+	const [discountError, setDiscountError] = React.useState('');
+	const [appliedDiscountCode, setAppliedDiscountCode] = React.useState('');
 
 	const total = cartItemsState.reduce(
 		(sum, item) =>
@@ -19,9 +24,34 @@ function eMartCartDetailsScreen({ navigation, route }) {
 		0
 	);
 
+	// Calculates 10% discount if discount code is applied
+	const getDiscountedTotal = () => {
+		if (appliedDiscountCode === 'EMART10') {
+			return total * 0.9;
+		}
+		return total;
+	};
+
+	const handleApplyDiscount = () => {
+		const code = discountCode.trim().toUpperCase();
+		if (code === 'EMART10') {
+			setDiscountMessage('10% discount applied!');
+			setDiscountError('');
+			setAppliedDiscountCode(code); // <-- set the applied code
+		} else if (code.length > 0) {
+			setDiscountMessage('');
+			setDiscountError('Invalid or expired coupon code.');
+			setAppliedDiscountCode(''); // <-- clear applied code
+		} else {
+			setDiscountMessage('');
+			setDiscountError('');
+			setAppliedDiscountCode('');
+		}
+	};
+
 	const removeFromCart = (index) => {
-    setCartItemsState(prev => prev.filter((_, i) => i !== index));
-};
+		setCartItemsState((prev) => prev.filter((_, i) => i !== index));
+	};
 
 	const renderCartItem = ({ item, index }) => (
 		<View style={styles.cartItem}>
@@ -45,11 +75,11 @@ function eMartCartDetailsScreen({ navigation, route }) {
 					<Text style={styles.deleteText}>Remove from cart</Text>
 				</Pressable>
 				<Text style={styles.cartItemTotal}>
-				₦
-				{(
-					parseFloat(item.price) * (parseInt(item.quantity, 10) || 0)
-				).toLocaleString()}
-			</Text>
+					₦
+					{(
+						parseFloat(item.price) * (parseInt(item.quantity, 10) || 0)
+					).toLocaleString()}
+				</Text>
 			</View>
 		</View>
 	);
@@ -68,9 +98,53 @@ function eMartCartDetailsScreen({ navigation, route }) {
 					</Text>
 				}
 			/>
+			<View style={{ marginVertical: 16 }}>
+				<Text style={{ fontSize: 15, marginBottom: 6 }}>Discount Code</Text>
+				<TextInput
+					style={{
+						borderWidth: 1,
+						borderColor: '#FF521B',
+						borderRadius: 4,
+						padding: 8,
+						backgroundColor: '#fff',
+						fontSize: 15,
+					}}
+					placeholder="Enter discount code. (Not case sensitive)"
+					value={discountCode}
+					onChangeText={setDiscountCode}
+					autoCapitalize="characters"
+				/>
+				{discountMessage ? (
+					<Text style={{ color: '#21A179', marginTop: 6 }}>
+						{discountMessage}
+					</Text>
+				) : null}
+				{discountError ? (
+					<Text style={{ color: '#E14E1F', marginTop: 6 }}>
+						{discountError}
+					</Text>
+				) : null}
+				<Pressable
+					style={{
+						backgroundColor: '#FF521B',
+						borderRadius: 4,
+						paddingVertical: 8,
+						alignItems: 'center',
+						marginTop: 8,
+					}}
+					onPress={handleApplyDiscount}
+				>
+					<Text style={{ color: '#fff' }}>Apply</Text>
+				</Pressable>
+			</View>
 			<View style={styles.summary}>
 				<Text style={styles.totalLabel}>Total:</Text>
-				<Text style={styles.totalValue}>₦{total.toLocaleString()}</Text>
+				<Text style={styles.totalValue}>
+					₦
+					{getDiscountedTotal().toLocaleString(undefined, {
+						maximumFractionDigits: 2,
+					})}
+				</Text>
 			</View>
 			<View style={styles.buttons}>
 				<Pressable
@@ -81,9 +155,7 @@ function eMartCartDetailsScreen({ navigation, route }) {
 				</Pressable>
 				<Pressable
 					style={styles.checkoutButton2}
-					onPress={() => {
-						/* handle checkout */
-					}}
+					onPress={() => navigation.navigate('Confirmation')}
 				>
 					<Text style={styles.checkoutText}>Proceed to Checkout</Text>
 				</Pressable>
@@ -110,7 +182,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		backgroundColor: '#FFF',
-		borderRadius: 10,
+		borderRadius: 4,
 		padding: 12,
 		marginBottom: 10,
 		elevation: 1,
@@ -172,7 +244,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 12,
 	},
-		checkoutButton2: {
+	checkoutButton2: {
 		backgroundColor: '#21A179',
 		borderRadius: 4,
 		paddingVertical: 8,
@@ -184,20 +256,20 @@ const styles = StyleSheet.create({
 		color: '#fff',
 		fontSize: 16,
 	},
-  buttons: {
-    flexDirection: 'row',
-	justifyContent: 'space-between'
-  },
-  delete: {
-	height: 60,
-	flexDirection: 'column',
-	justifyContent: 'space-between',
-	// backgroundColor: 'grey',
-	alignItems: 'flex-end'
-  },
-  deleteText: {
-	fontSize: 12
-  }
+	buttons: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	delete: {
+		height: 60,
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		// backgroundColor: 'grey',
+		alignItems: 'flex-end',
+	},
+	deleteText: {
+		fontSize: 12,
+	},
 });
 
-export default eMartCartDetailsScreen;
+export default EMartCartDetails;
