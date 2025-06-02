@@ -158,7 +158,12 @@ function SelectProductScreen({ navigation, route }) {
 					(item) => typeof item === 'object' && item.name // filter out non-product fields
 			  )
 			: [];
-
+	const cartItems = products
+		.filter((item) => parseInt(quantities[item.name], 10) > 0)
+		.map((item) => ({
+			...item,
+			quantity: quantities[item.name],
+		}));
 	// Render each product card
 	const renderProductCard = ({ item }) => (
 		<View style={styles.productCard}>
@@ -175,9 +180,9 @@ function SelectProductScreen({ navigation, route }) {
 				<Text style={styles.productName}>{item.name}</Text>
 			</View>
 			<View style={styles.pricenSize}>
-                <Text style={styles.productSize}>{item.size}</Text>
-			<Text style={styles.productPrice}>₦{item.price}</Text>
-            </View>
+				<Text style={styles.productSize}>{item.size}</Text>
+				<Text style={styles.productPrice}>₦{item.price}</Text>
+			</View>
 			<View style={styles.addToCartAlt}>
 				<Pressable
 					style={styles.cartButton}
@@ -252,6 +257,26 @@ function SelectProductScreen({ navigation, route }) {
 						</Text>
 					}
 				/>
+			</View>
+			<View style={styles.cartFab}>
+				<Pressable
+					style={styles.cartButtonFab}
+					onPress={() =>
+						navigation.navigate('eMartCartDetailsScreen', { cartItems })
+					}
+				>
+					<MaterialIcons name="shopping-cart" size={28} color="#fff" />
+					{Object.values(quantities).some((q) => parseInt(q, 10) > 0) && (
+						<View style={styles.cartCounter}>
+							<Text style={styles.cartCounterText}>
+								{Object.values(quantities).reduce(
+									(sum, q) => sum + (parseInt(q, 10) || 0),
+									0
+								)}
+							</Text>
+						</View>
+					)}
+				</Pressable>
 			</View>
 		</View>
 	);
@@ -345,12 +370,12 @@ const styles = StyleSheet.create({
 		minWidth: 90,
 		maxWidth: 120,
 	},
-    imagenTitle: {
-        width: '100%',
-        height: 110,
-        alignItems: 'center',
-        padding: 4,
-    },
+	imagenTitle: {
+		width: '100%',
+		height: 110,
+		alignItems: 'center',
+		padding: 4,
+	},
 	productImage: {
 		width: 64,
 		height: 64,
@@ -364,10 +389,10 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontWeight: '700',
 	},
-    pricenSize: {
-        marginTop: 15,
-        marginBottom: 10
-    },
+	pricenSize: {
+		marginTop: 15,
+		marginBottom: 10,
+	},
 	productSize: {
 		minWidth: 100,
 		fontSize: 13,
@@ -421,6 +446,43 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: '#FF521B',
 		// fontWeight: 'bold',
+	},
+	cartFab: {
+		position: 'absolute',
+		bottom: 32,
+		right: 24,
+		zIndex: 100,
+	},
+	cartButtonFab: {
+		backgroundColor: '#FF521B',
+		borderRadius: 32,
+		width: 56,
+		height: 56,
+		alignItems: 'center',
+		justifyContent: 'center',
+		elevation: 6,
+		shadowColor: '#000',
+		shadowOpacity: 0.2,
+		shadowRadius: 4,
+	},
+	cartCounter: {
+		position: 'absolute',
+		top: 6,
+		right: 6,
+		backgroundColor: '#fff',
+		borderRadius: 10,
+		minWidth: 20,
+		height: 20,
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 4,
+		borderWidth: 1,
+		borderColor: '#FF521B',
+	},
+	cartCounterText: {
+		color: '#FF521B',
+		fontWeight: 'bold',
+		fontSize: 13,
 	},
 });
 
