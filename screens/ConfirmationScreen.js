@@ -29,12 +29,13 @@ export default function ConfirmationScreen({ navigation, route }) {
 	});
 	const [loading, setLoading] = useState(false);
 	const [selectedPayment, setSelectedPayment] = useState('');
+	const [isVerified, setIsVerified] = useState(false);
 
 	const user = getAuth().currentUser;
 
 	const paymentOptions = [
 		{ key: 'bank', label: 'Bank Transfer' },
-		{ key: 'cash', label: 'Cash on Delivery' },
+		{ key: 'cash', label: 'Cash on Delivery (Verified Customers only)' },
 		{ key: 'card', label: 'Card' },
 	];
 
@@ -65,6 +66,19 @@ export default function ConfirmationScreen({ navigation, route }) {
 			setAddresses([]);
 		}
 	};
+
+	useEffect(() => {
+    const fetchVerification = async () => {
+        if (!user) return;
+        const userDocRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userDocRef);
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setIsVerified(!!userData.verified);
+        }
+    };
+    fetchVerification();
+}, [user]);
 
 	useEffect(() => {
 		const fetchDefaultAddress = async () => {
@@ -386,20 +400,37 @@ export default function ConfirmationScreen({ navigation, route }) {
 			<View style={styles.paymentOptions}>
   <Text>Payment Options</Text>
   <View>
-    {paymentOptions.map(option => (
-      <Pressable
-        key={option.key}
-        style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}
-        onPress={() => setSelectedPayment(option.key)}
-      >
-        <Checkbox
-          value={selectedPayment === option.key}
-          onValueChange={() => setSelectedPayment(option.key)}
-          color="#FF521B"
-        />
-        <Text style={styles.addressText2}>{option.label}</Text>
-      </Pressable>
-    ))}
+    {paymentOptions.map(option => {
+      const isCash = option.key === 'cash';
+      const disabled = isCash && !isVerified;
+      return (
+        <Pressable
+          key={option.key}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: 6,
+            opacity: disabled ? 0.4 : 1,
+          }}
+          onPress={() => {
+            if (!disabled) setSelectedPayment(option.key);
+          }}
+          disabled={disabled}
+        >
+          <Checkbox
+            value={selectedPayment === option.key}
+            onValueChange={() => {
+              if (!disabled) setSelectedPayment(option.key);
+            }}
+            color="#FF521B"
+            disabled={disabled}
+          />
+          <Text style={[styles.addressText2, disabled && { color: '#aaa' }]}>
+            {option.label}
+          </Text>
+        </Pressable>
+      );
+    })}
   </View>
 </View>
 			<Pressable onPress={() => navigation.navigate('PaymentOptions')}>
