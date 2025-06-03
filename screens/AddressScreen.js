@@ -64,13 +64,14 @@ export default function AddressScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {/* Fixed Header */}
-      <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
-        </Pressable>
-      </View>
-      <Text style={styles.title}>Choose a delivery location</Text>
+      {/* Header */}
+            <View style={styles.header}>
+              <Pressable onPress={() => navigation.goBack()}>
+                <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
+              </Pressable>
+              <Text style={styles.locationText}>Choose a delivery location</Text>
+              <View style={{ width: 24 }} />
+            </View>
       <ScrollView>
         {Object.entries(addresses).map(([id, address]) => (
           <Pressable
@@ -107,24 +108,23 @@ export default function AddressScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#FFF0EB',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 40,
-    marginBottom: 5,
-    backgroundColor: '#FFF9F7',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FF521B',
-    marginBottom: 16,
-  },
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		padding: 16,
+		backgroundColor: 'white',
+		borderBottomWidth: 1,
+		borderBottomColor: '#F0F0F0',
+		marginTop: 40,
+	},
+	locationText: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: '#FF521B',
+	},
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',

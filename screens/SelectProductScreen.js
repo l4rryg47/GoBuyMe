@@ -210,16 +210,22 @@ function SelectProductScreen({ navigation, route }) {
 		<View style={styles.container}>
 			{/* Header */}
 			<View style={styles.header}>
-				<Pressable onPress={() => {
-        Alert.alert(
-            'Leave this page?',
-            'Your cart for this store will be cleared if you go back. Are you sure?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                { text: 'Yes', style: 'destructive', onPress: () => navigation.goBack() },
-            ]
-        );
-    }}>
+				<Pressable
+					onPress={() => {
+						Alert.alert(
+							'Leave this page?',
+							'Your cart for this store will be cleared if you go back. Are you sure?',
+							[
+								{ text: 'Cancel', style: 'cancel' },
+								{
+									text: 'Yes',
+									style: 'destructive',
+									onPress: () => navigation.goBack(),
+								},
+							]
+						);
+					}}
+				>
 					<MaterialIcons name="arrow-back" size={24} color="#FF521B" />
 				</Pressable>
 				<Text style={styles.locationText}>Select Products</Text>
@@ -271,9 +277,7 @@ function SelectProductScreen({ navigation, route }) {
 			<View style={styles.cartFab}>
 				<Pressable
 					style={styles.cartButtonFab}
-					onPress={() =>
-						navigation.navigate('EMartCartDetails', { cartItems })
-					}
+					onPress={() => navigation.navigate('EMartCartDetails', { cartItems })}
 				>
 					<MaterialIcons name="shopping-cart" size={28} color="#fff" />
 					{Object.values(quantities).some((q) => parseInt(q, 10) > 0) && (

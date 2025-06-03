@@ -151,14 +151,16 @@ export default function MyAddressesScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Fixed Header */}
-      <View style={styles.header}>
-        <Pressable onPress={() => navigation.navigate('Home', { screen: 'Profile' })}>
-          <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
-        </Pressable>
-      </View>
-      <Text style={styles.title}>Choose a delivery location</Text>
-      <Text style={{ marginBottom: 16, color: '#0B3948', fontStyle: 'italic' }}>
+      {/* Header */}
+                  <View style={styles.header}>
+                    <Pressable onPress={() => navigation.goBack()}>
+                      <MaterialIcons name="arrow-back" size={24} color="#FF521B" />
+                    </Pressable>
+                    <Text style={styles.locationText}>Choose a delivery location</Text>
+                    <View style={{ width: 24 }} />
+                  </View>
+
+      <Text style={{ color: '#0B3948', fontStyle: 'italic', paddingVertical: 8, paddingHorizontal: 16, marginBottom: 0 }}>
         Select a default address for your orders. You can add or edit addresses as needed.
       </Text>
       <ScrollView>
@@ -266,36 +268,37 @@ export default function MyAddressesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#FFF0EB',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 40,
-    marginBottom: 5,
-    backgroundColor: '#FFF9F7',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FF521B',
-    marginBottom: 16,
-  },
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		padding: 16,
+		backgroundColor: 'white',
+		borderBottomWidth: 1,
+		borderBottomColor: '#F0F0F0',
+		marginTop: 40,
+	},
+	locationText: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		color: '#FF521B',
+	},
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
     backgroundColor: '#FFF',
-    borderRadius: 8,
+    borderRadius: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    paddingVertical: 16,
+    paddingHorizontal: 16 
   },
   checkbox: {
     width: 24,
@@ -316,44 +319,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#2A324B',
   },
-  nextButton: {
-    backgroundColor: '#FF521B',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  nextButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   newAddressForm: {
-    marginTop: 16,
+    paddingTop: 16,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#dcdba8'
   },
   input: {
     borderWidth: 1,
-    borderColor: '#0B3948',
-    borderRadius: 8,
+    borderColor: '#FF521B',
+    borderRadius: 4,
     padding: 8,
-    marginBottom: 8,
+    marginVertical: 8,
+    marginHorizontal: 16
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-  },
-  checkboxLabel: {
-    marginLeft: 8,
-    fontSize: 16,
-    color: '#2A324B',
+    marginHorizontal: 16,
+    marginVertical: 8
   },
   addButton: {
     backgroundColor: '#FF521B',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 4,
     alignItems: 'center',
-    marginTop: 16,
+    marginVertical: 16,
+    marginHorizontal: 16
   },
   addButtonText: {
     color: '#FFF',
@@ -363,9 +355,10 @@ const styles = StyleSheet.create({
   cancelButton: {
     backgroundColor: '#FF521B',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 4,
     alignItems: 'center',
-    marginTop: 16,
+    marginBottom: 20,
+    marginHorizontal: 16
   },
   cancelButtonText: {
     color: '#FFF',

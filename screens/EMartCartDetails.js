@@ -109,7 +109,7 @@ function EMartCartDetails({ navigation, route }) {
 						backgroundColor: '#fff',
 						fontSize: 15,
 					}}
-					placeholder="Enter discount code. (Not case sensitive)"
+					placeholder="Enter discount code."
 					value={discountCode}
 					onChangeText={setDiscountCode}
 					autoCapitalize="characters"
