@@ -13,7 +13,7 @@ import { getAuth } from 'firebase/auth';
 import { getDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-export default function ConfirmationScreen({ navigation }) {
+export default function ConfirmationScreen({ navigation, route }) {
 	const [addresses, setAddresses] = useState([]);
 	const [defaultAddress, setDefaultAddress] = useState(null);
 	const [showAddressesModal, setShowAddressesModal] = useState(false);
@@ -28,8 +28,15 @@ export default function ConfirmationScreen({ navigation }) {
 		isDefault: false,
 	});
 	const [loading, setLoading] = useState(false);
+	const [selectedPayment, setSelectedPayment] = useState('');
 
 	const user = getAuth().currentUser;
+
+	const paymentOptions = [
+		{ key: 'bank', label: 'Bank Transfer' },
+		{ key: 'cash', label: 'Cash on Delivery' },
+		{ key: 'card', label: 'Card' },
+	];
 
 	const fetchAddresses = async () => {
 		try {
@@ -125,6 +132,34 @@ export default function ConfirmationScreen({ navigation }) {
 				<Text style={styles.locationText}>Address and Billing</Text>
 				<View style={{ width: 24 }} />
 			</View>
+			<View style={{ backgroundColor: 'white', margin: 16, borderRadius: 4, padding: 16, elevation: 1 }}>
+  <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 8 }}>Cart Items</Text>
+  {Array.isArray(route?.params?.cartItems) && route.params.cartItems.length > 0 ? (
+    <>
+      {route.params.cartItems.map((item, idx) => (
+        <View key={item.id || item.name + idx} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+          <Text style={{ fontSize: 15 }}>{item.name} x {item.quantity}</Text>
+          <Text style={{ fontSize: 15 }}>₦{(parseFloat(item.price) * (parseInt(item.quantity, 10) || 0)).toLocaleString()}</Text>
+        </View>
+      ))}
+      <View style={{ borderTopWidth: 1, borderTopColor: '#eee', marginTop: 8, paddingTop: 8, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Total:</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+          ₦
+          {route.params.cartItems
+            .reduce(
+              (sum, item) =>
+                sum + parseFloat(item.price) * (parseInt(item.quantity, 10) || 0),
+              0
+            )
+            .toLocaleString()}
+        </Text>
+      </View>
+    </>
+  ) : (
+    <Text style={{ color: '#aaa' }}>Your cart is empty.</Text>
+  )}
+</View>
 			<View style={styles.deliveryAddress}>
 				<Text style={styles.addressHeader}>Delivery Address</Text>
 				{defaultAddress ? (
@@ -348,10 +383,27 @@ export default function ConfirmationScreen({ navigation }) {
 				{/* Logic to enter new shipping address */}
 			</View>
 
-			<Text>1:</Text>
-			<Text>Address 2:</Text>
+			<View style={styles.paymentOptions}>
+  <Text>Payment Options</Text>
+  <View>
+    {paymentOptions.map(option => (
+      <Pressable
+        key={option.key}
+        style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}
+        onPress={() => setSelectedPayment(option.key)}
+      >
+        <Checkbox
+          value={selectedPayment === option.key}
+          onValueChange={() => setSelectedPayment(option.key)}
+          color="#FF521B"
+        />
+        <Text style={styles.addressText2}>{option.label}</Text>
+      </Pressable>
+    ))}
+  </View>
+</View>
 			<Pressable onPress={() => navigation.navigate('PaymentOptions')}>
-				<Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20 }}>
+				<Text style={{ color: '#FF521B', fontSize: 18, marginTop: 20, textAlign: 'center' }}>
 					Proceed to Payment
 				</Text>
 			</Pressable>
@@ -383,7 +435,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 16,
 		paddingHorizontal: 16,
 		backgroundColor: 'white',
-		margin: 10,
+		margin: 16,
 		borderRadius: 4,
 		elevation: 1,
 		shadowColor: '#000',
@@ -393,7 +445,14 @@ const styles = StyleSheet.create({
 	},
 	addressHeader: {
 		fontWeight: 'bold',
-		fontSize: 14,
+		fontSize: 16,
+	},
+	addressText: {
+		fontSize: 16
+	},
+		addressText2: {
+		fontSize: 16,
+		marginLeft: 8
 	},
 	modalOverlay: {
 		flex: 1,
@@ -422,5 +481,17 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 4,
 		marginHorizontal: 4,
+	},
+	paymentOptions: {
+		paddingVertical: 16,
+		paddingHorizontal: 16,
+		backgroundColor: 'white',
+		margin: 16,
+		borderRadius: 4,
+		elevation: 1,
+		shadowColor: '#000',
+		shadowOpacity: 0.04,
+		shadowRadius: 2,
+		gap: 10,
 	},
 });

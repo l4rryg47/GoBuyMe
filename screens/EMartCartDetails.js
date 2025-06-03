@@ -155,7 +155,7 @@ function EMartCartDetails({ navigation, route }) {
 				</Pressable>
 				<Pressable
 					style={styles.checkoutButton2}
-					onPress={() => navigation.navigate('Confirmation')}
+					onPress={() => navigation.navigate('Confirmation', {cartItems})}
 				>
 					<Text style={styles.checkoutText}>Proceed to Checkout</Text>
 				</Pressable>
