@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
 	cartImage: {
 		width: 54,
 		height: 54,
-		borderRadius: 8,
+		borderRadius: 4,
 		marginRight: 12,
 		backgroundColor: '#F0F0F0',
 	},

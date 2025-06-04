@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 12,
     marginBottom: 16,
     height: 45,
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
   restaurantCard: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 4,
     marginBottom: 12,
     overflow: 'hidden',
     elevation: 2,

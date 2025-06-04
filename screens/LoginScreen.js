@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 4,
     padding: 15,
     marginBottom: 15,
     backgroundColor: '#FFF', // White background for inputs
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: '#FF521B', // Your brand color
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 4,
     alignItems: 'center',
     marginBottom: 15,
   },
